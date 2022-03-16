@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { Soldier } from 'src/app/core/domain/model/Soldier';
+import { SoldierQuery } from '../../store/soldier/soldier.query';
+import { SoldierStore } from '../../store/soldier/soldier.store';
 
 @Injectable({
   providedIn: 'root'
@@ -9,15 +10,21 @@ export class SoldierService {
 
   private cache: Soldier[] = []
   
-  constructor() { }
+  constructor(
+    private store: SoldierStore,
+    private query: SoldierQuery
+  ) { }
   
-  add(entity: Soldier): Observable<Soldier> {
-    this.cache.push(entity)
-    return of(entity)
+  findByName(name: string) {
+    return this.query.selectEntity(entity => entity.name === name)
+  }
+
+  save(entity: Soldier) {
+    this.store.add(entity, { prepend: true })     
   }
 
   findAll() {
-    return of(this.cache)
+    return this.query.selectAll()
   }
 
   
