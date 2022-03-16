@@ -1,0 +1,10 @@
+<div>
+    <div>
+        <p>Register your name and fight for the world</p>
+        <label for="name">Name: </label>
+        <input id="name" type="text" [formControl]="name">
+    </div>
+    <button type="submit" (click)="onAddSoldier()" [disabled]="!name.valid">Fight for UKraine and the world</button>
+
+    
+</div>
