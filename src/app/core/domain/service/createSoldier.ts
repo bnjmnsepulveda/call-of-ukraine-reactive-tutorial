@@ -1,11 +1,12 @@
-import { SoldierPlayer } from "../model/SoldierPlayer";
+import { now } from "../../lib/DateHelper";
+import { Soldier } from "../model/Soldier";
 import createUniqueID from "./createUniqueID";
 
-export function createSoldierPlayer(name: string): SoldierPlayer {
+export function createSoldier(name: string): Soldier {
     return {
         id: createUniqueID(name),
         name: name,
-        createdAt: new Date(),
+        createdAt: now(),
         gamePoints: 100,
         successAttacks: 0,
         usedWeapons: [] 
