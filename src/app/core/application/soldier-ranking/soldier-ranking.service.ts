@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { of } from 'rxjs';
-import { SoldierService } from '../../domain/service/soldier.service';
+import { SoldierStateService } from '../../store/service/soldier-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +8,10 @@ import { SoldierService } from '../../domain/service/soldier.service';
 export class SoldierRankingService {
 
   constructor(
-    private soldierService: SoldierService
+    private soldierState: SoldierStateService
   ) { }
 
   findSoldiers() {
-    return this.soldierService.findAll()
+    return this.soldierState.findAll()
   }
 }

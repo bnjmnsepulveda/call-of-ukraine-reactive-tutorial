@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { concatMap, EMPTY, filter, iif, isEmpty, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { createSoldier } from '../../../domain/service/createSoldier';
 import { Soldier } from 'src/app/core/domain/model/Soldier';
-import { SoldierService } from '../../../domain/service/soldier.service';
+import { SoldierStateService } from '../../../store/service/soldier-state.service';
 import { SoldierAlreadyRegisteredError } from '../error/SoldierAlreadyRegisteredError';
+import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +12,24 @@ import { SoldierAlreadyRegisteredError } from '../error/SoldierAlreadyRegistered
 export class RegisterService {
 
   constructor(
-    private soldierService: SoldierService
+    private soldierState: SoldierStateService,
+    private sessionState: SessionStateService
   ) { }
 
   registerSoldier(name: string) {
-    return this.soldierService.findByName(name).pipe(
+    return this.soldierState.findByName(name).pipe(
       map(soldier => soldier ? false : true),
     ).subscribe(isValidName => {
       if (isValidName) {
-        this.soldierService.save(createSoldier(name))
+        const soldier = createSoldier(name)
+        this.soldierState.save(soldier)
+        this.sessionState.saveSoldierSession(soldier)
       }
     })
   }
 
   findSoldiers(){
-    return this.soldierService.findAll()
+    return this.soldierState.findAll()
   }
 
 
