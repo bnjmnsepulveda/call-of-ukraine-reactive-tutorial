@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { WeaponSelectorService } from 'src/app/core/application/service/weapon-selector.service';
+import { Weapon } from 'src/app/core/domain/model/Weapon';
 
 @Component({
   selector: 'app-select-weapon',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SelectWeaponComponent implements OnInit {
 
-  constructor() { }
+  weapon: Weapon = null;
+  selectedWeapon: Weapon = null;
+
+  constructor(private weaponSelectorService: WeaponSelectorService) { }
 
   ngOnInit(): void {
+    this.weaponSelectorService.getRandomWeapon()
+    .subscribe(weapon => this.weapon = weapon)
   }
 
+  getWeapon() {
+    this.selectedWeapon = this.weapon
+  }
+
+  fireWeapon() {
+    this.selectedWeapon = null
+  }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { getWeapons } from '../../domain/service/getWeapons';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class WeaponStateService {
   constructor() { }
 
   selectAll() {
-    return from(getWeapons())
+    return of(getWeapons())
   }
 
 }

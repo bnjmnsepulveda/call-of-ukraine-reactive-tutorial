@@ -1,1 +1,12 @@
-<p>select-weapon works!</p>
+<h2>SELECCIONA TU MALDITA ARMA Y PELEA CONTRA LA PERRA DE RUSIA</h2>
+<div *ngIf="weapon">
+    <h3>{{ weapon.name }}</h3>
+    <p>{{ weapon.description }}</p>
+    <button (click)="getWeapon()">TOMAR ARMA</button>
+</div>
+
+<div *ngIf="selectedWeapon">
+    {{ selectedWeapon | json }}
+    <hr/>
+    <button (click)="fireWeapon()">LANZAR</button>
+</div>

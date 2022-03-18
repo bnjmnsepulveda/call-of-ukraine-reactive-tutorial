@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concatMap, EMPTY, filter, iif, isEmpty, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { map } from 'rxjs';
 import { createSoldier } from '../../domain/service/createSoldier';
 import { SoldierStateService } from '../../store/service/soldier-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
@@ -28,10 +28,5 @@ export class RegisterService {
       }
     })
   }
-
-  findSoldiers(){
-    return this.soldierState.findAll()
-  }
-
 
 }
