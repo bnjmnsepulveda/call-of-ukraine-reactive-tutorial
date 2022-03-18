@@ -7,8 +7,6 @@ import { SoldierStore } from '../soldier/soldier.store';
   providedIn: 'root'
 })
 export class SoldierStateService {
-
-  private cache: Soldier[] = []
   
   constructor(
     private store: SoldierStore,

@@ -3,9 +3,9 @@ import { EntityBase } from "../../lib/EntityBase";
 export interface Weapon extends EntityBase {
     
     description: string;
-    type: string;
+    category: string;
     country: string;
-    attackPoints: string;
+    attackPoints: number;
     accuracyPercentage: number;
 
 }

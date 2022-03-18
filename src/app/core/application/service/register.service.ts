@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { concatMap, EMPTY, filter, iif, isEmpty, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
-import { createSoldier } from '../../../domain/service/createSoldier';
-import { Soldier } from 'src/app/core/domain/model/Soldier';
-import { SoldierStateService } from '../../../store/service/soldier-state.service';
-import { SoldierAlreadyRegisteredError } from '../error/SoldierAlreadyRegisteredError';
+import { createSoldier } from '../../domain/service/createSoldier';
+import { SoldierStateService } from '../../store/service/soldier-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
+import { RouterService } from 'src/app/core/service/router.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,8 @@ export class RegisterService {
 
   constructor(
     private soldierState: SoldierStateService,
-    private sessionState: SessionStateService
+    private sessionState: SessionStateService,
+    private routerService: RouterService
   ) { }
 
   registerSoldier(name: string) {
@@ -24,6 +24,7 @@ export class RegisterService {
         const soldier = createSoldier(name)
         this.soldierState.save(soldier)
         this.sessionState.saveSoldierSession(soldier)
+        this.routerService.goToGame()
       }
     })
   }
