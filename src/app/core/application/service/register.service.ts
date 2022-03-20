@@ -3,7 +3,7 @@ import { map } from 'rxjs';
 import { createSoldier } from '../../domain/service/createSoldier';
 import { SoldierStateService } from '../../store/service/soldier-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
-import { RouterService } from 'src/app/core/service/router.service';
+import { RouterService } from 'src/app/presentation/shared/service/router.service';
 
 @Injectable({
   providedIn: 'root'

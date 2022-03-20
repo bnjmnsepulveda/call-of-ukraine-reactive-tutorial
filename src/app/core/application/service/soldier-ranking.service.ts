@@ -1,5 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
-import { of } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { SoldierStateService } from '../../store/service/soldier-state.service';
 
 @Injectable({
