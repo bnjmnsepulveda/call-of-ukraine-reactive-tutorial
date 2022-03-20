@@ -8,6 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NewSoldierComponent } from './presentation/pages/register/new-soldier/new-soldier.component';
 import { GameComponent } from './presentation/pages/game/game/game.component';
 import { GameModule } from './presentation/pages/game/game.module';
+import { TitleComponent } from './presentation/shared/component/title/title.component';
 
 const routes: Routes = [
   {
@@ -27,7 +28,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TitleComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

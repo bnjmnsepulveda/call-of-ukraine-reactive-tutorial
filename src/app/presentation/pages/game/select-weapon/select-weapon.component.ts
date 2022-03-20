@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { WeaponSelectorService } from 'src/app/core/application/service/weapon-selector.service';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 
@@ -10,7 +10,7 @@ import { Weapon } from 'src/app/core/domain/model/Weapon';
 export class SelectWeaponComponent implements OnInit {
 
   weapon: Weapon = null;
-  selectedWeapon: Weapon = null;
+  @Output() weaponChange: EventEmitter<Weapon> = new EventEmitter<Weapon>();
 
   constructor(private weaponSelectorService: WeaponSelectorService) { }
 
@@ -20,10 +20,7 @@ export class SelectWeaponComponent implements OnInit {
   }
 
   getWeapon() {
-    this.selectedWeapon = this.weapon
+    this.weaponChange.emit(this.weapon)
   }
 
-  fireWeapon() {
-    this.selectedWeapon = null
-  }
 }

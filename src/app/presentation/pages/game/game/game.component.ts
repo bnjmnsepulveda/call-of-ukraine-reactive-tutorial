@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { GameStarterService } from 'src/app/core/application/service/game-starter.service';
+import { RussianCity } from 'src/app/core/domain/model/RussianCity';
+import { Weapon } from 'src/app/core/domain/model/Weapon';
 
 @Component({
   selector: 'app-game',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  constructor() { }
+  selectedWeapon: Weapon = null
+  selectedRussianCity: RussianCity = null
+
+  constructor(private game: GameStarterService) { }
 
   ngOnInit(): void {
+    this.game.loadRussianCountries()
   }
 
+  takeRandomWeapon(weapon: Weapon) {
+    console.log('weapon taked', weapon)
+    this.selectedWeapon = weapon
+  }
+
+  destroyCity(russianCity: RussianCity) {
+    console.log('russian city to destroy', russianCity)
+    this.selectedRussianCity = russianCity
+  }
 }

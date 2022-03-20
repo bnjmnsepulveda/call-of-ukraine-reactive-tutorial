@@ -1,0 +1,10 @@
+<p>Select the city to destroy</p>
+<form [formGroup]="russianCityForm" (ngSubmit)="submit()">
+    <p>
+        <select formControlName="city">
+            <option [ngValue]="null" disabled>Select Country</option>
+            <option *ngFor="let city of russianCities" [ngValue]="city.id"> {{city.name}} </option>
+        </select>
+        <button type="submit" [disabled]="!russianCityForm.value.city " >Destruir</button>
+    </p>
+</form>
