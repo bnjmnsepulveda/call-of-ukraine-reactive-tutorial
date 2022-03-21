@@ -4,7 +4,7 @@ import createUniqueID from "./createUniqueID";
 
 export function createSoldier(name: string): Soldier {
     return {
-        id: createUniqueID(name),
+        id: name,
         name: name,
         createdAt: now(),
         gamePoints: 100,

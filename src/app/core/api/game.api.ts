@@ -5,9 +5,10 @@ import { RussianCity } from "../domain/model/RussianCity";
 import { Soldier } from "../domain/model/Soldier";
 // Initialize Cloud Firestore through Firebase
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
-import { collection, addDoc,query, where, getDocs } from "firebase/firestore"; 
-import { doc, getDoc } from "firebase/firestore";
+import { Firestore, getFirestore } from "firebase/firestore"
+import { collection, addDoc,query, where, getDocs, getDoc } from "firebase/firestore"; 
+import { doc, setDoc } from "firebase/firestore";
+import { Attack } from "../domain/model/Attack";
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyC8dKarz-c8JrXWirpoL8yFWoPZ4Ami_Qg',
   authDomain: 'call-of-ukraine-app.firebaseapp.com',
@@ -19,26 +20,35 @@ const firebaseApp = initializeApp({
 })
 export class GameAPI {
 
-    private db: any = null;
+    private db: Firestore = null;
 
     constructor() {
         this.db = getFirestore();
     }
 
+    private saveEntity(collectionName: string, entity: any) {
+        const promise = setDoc(doc(this.db, collectionName, entity.id), entity)
+        return from(promise).pipe(
+            map(() => entity)
+        )
+    }
+
     existsSoldierName(name: string) {
-        const querySearch = query(collection(this.db, 'soldiers'), where('name', '==', name));
-        const querySnapshot = getDocs(querySearch).then(d => !d.empty);
-        return from(querySnapshot)
+        const docRef = doc(this.db, 'soldiers', name);
+        const docSnap = getDoc(docRef);
+        return from(docSnap.then(d => d.exists()))
     }
 
     saveSoldier(soldier: Soldier) {
-        const promise = addDoc(collection(this.db, 'soldiers'), soldier).then(saved => saved.id)
-        return from(promise).pipe(
-            map(id => {
-                soldier.id = id
-                return soldier
-            })
-        )
+        return this.saveEntity('soldiers', soldier)
+    }
+
+    saveRusssianCity(russianCity: RussianCity) {
+        return this.saveEntity('russianCities', russianCity)
+    }
+
+    saveAttack(attack: Attack) {
+        return this.saveEntity('attacks', attack)
     }
 
 }

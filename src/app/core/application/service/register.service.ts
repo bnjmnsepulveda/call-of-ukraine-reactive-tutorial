@@ -23,7 +23,7 @@ export class RegisterService {
       tap(x => console.log(`name ${name} exist: ${x}`)),
       concatMap(existsSoldierName => !existsSoldierName ? of(createSoldier(name)) : throwError(()=> new SoldierAlreadyRegisteredError(name))),
       switchMap(soldier => this.gameApi.saveSoldier(soldier)),
-      tap(soldier => this.soldierState.save(soldier)),
+      //tap(soldier => this.soldierState.save(soldier)),
       tap(soldier => this.sessionState.saveSoldierSession(soldier))
     ).subscribe({
       next: success,
