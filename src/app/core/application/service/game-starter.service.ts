@@ -10,7 +10,7 @@ export class GameStarterService {
   constructor(private russianCityState: RussianCityStateService) { }
 
   loadRussianCountries() {
-    this.russianCityState.save(getRussianCities())
+    this.russianCityState.saveAll(getRussianCities())
   }
 
 }

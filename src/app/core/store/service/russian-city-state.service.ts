@@ -13,7 +13,11 @@ export class RussianCityStateService {
     private store: RussianCityStore
   ) { }
 
-  save(entities: RussianCity[]) {
+  save(russianCity: RussianCity) {
+    this.store.update(russianCity.id, russianCity)
+  }
+
+  saveAll(entities: RussianCity[]) {
     this.store.set(entities)
   }
 

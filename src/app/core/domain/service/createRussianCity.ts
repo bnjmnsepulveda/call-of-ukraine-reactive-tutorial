@@ -8,7 +8,7 @@ interface Properties {
     population: number;
 }
 
-export function createRussianCity(props: Properties, healthPoints= 1000): RussianCity {
+export function createRussianCity(props: Properties, healthPoints=1000): RussianCity {
 
     return {
         id: createUniqueID(props.name),

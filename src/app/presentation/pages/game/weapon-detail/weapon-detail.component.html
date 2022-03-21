@@ -1,5 +1,5 @@
 <p>weapon details</p>
-<div>
+<div *ngIf="weapon" >
     <h2>{{ weapon.name }} Ataque: {{ weapon.attackPoints }} </h2>
     <p>
         {{ weapon.description }}

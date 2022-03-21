@@ -12,7 +12,7 @@ import { RussianCityState } from 'src/app/core/store/russian-city/russian-city.s
 export class SelectRussianCityComponent implements OnInit {
 
   russianCityForm: FormGroup = null;
-  city = new FormControl('');
+  city = new FormControl(null);
   russianCities: Pick<RussianCityState, 'id' | 'name'>[] = []
   @Output() russianCityChange: EventEmitter<RussianCity> = new EventEmitter<RussianCity>();
 
@@ -34,7 +34,7 @@ export class SelectRussianCityComponent implements OnInit {
 
   submit() {
     console.log("Form Submitted")
-    this.russianCityChange.emit(this.russianCityForm.value)
+    this.russianCityChange.emit(this.russianCityForm.value.city)
   }
 
 

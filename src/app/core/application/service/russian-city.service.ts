@@ -14,4 +14,8 @@ export class RussianCityService {
     return this.state.selectAll()
   }
 
+  updateRussianCityState(russianCity: RussianCity) {
+    this.state.save(russianCity)
+  }
+
 }
