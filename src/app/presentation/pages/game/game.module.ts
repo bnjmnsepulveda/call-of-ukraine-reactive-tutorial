@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameComponent } from './game/game.component';
-import { RankingModule } from '../ranking/ranking.module';
 import { SelectWeaponComponent } from './select-weapon/select-weapon.component';
 import { SelectRussianCityComponent } from './select-russian-city/select-russian-city.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WeaponDetailComponent } from './weapon-detail/weapon-detail.component';
+import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.component';
+import { SharedModule } from '../../shared/shared.module';
 
 
 
@@ -14,12 +15,13 @@ import { WeaponDetailComponent } from './weapon-detail/weapon-detail.component';
     GameComponent,
     SelectWeaponComponent,
     SelectRussianCityComponent,
-    WeaponDetailComponent, 
+    WeaponDetailComponent,
+    SoldierRankingComponent, 
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RankingModule
+    SharedModule
   ],
   exports:[
     GameComponent

@@ -3,6 +3,7 @@ import { GameStarterService } from 'src/app/core/application/service/game-starte
 import { GameService } from 'src/app/core/application/service/game.service';
 import { RussianCity } from 'src/app/core/domain/model/RussianCity';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
+import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 
 @Component({
   selector: 'app-game',
@@ -16,7 +17,8 @@ export class GameComponent implements OnInit {
 
   constructor(
     private starterGame: GameStarterService, 
-    private game: GameService
+    private game: GameService,
+    private sessionState: SessionStateService
   ) { }
 
   ngOnInit(): void {
@@ -37,10 +39,12 @@ export class GameComponent implements OnInit {
     console.log('russian city to destroy', russianCity)
     this.selectedRussianCity = russianCity
     this.game.attackRussianCity({
-      soldierName: '',
+      soldier: this.sessionState.getSoldier(),
       city: this.selectedRussianCity,
       weapon: this.selectedWeapon
     })
+    this.selectedRussianCity = null
+    this.selectedWeapon = null
   }
 
 }

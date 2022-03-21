@@ -1,0 +1,6 @@
+<app-subtitle subtitle="RANKING SOLDADOS MAS CHOROS!!!" ></app-subtitle>
+<div *ngIf="soldierRankinks.length > 0" >
+    <p *ngFor="let sr of soldierRankinks">
+        {{ sr.soldiername }} tiene {{ sr.points }} puntos
+    </p>
+</div>
