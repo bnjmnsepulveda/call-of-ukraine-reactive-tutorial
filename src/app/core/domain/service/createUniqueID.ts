@@ -1,6 +1,6 @@
-import { v4 as uuid } from 'uuid';
+import { nanoid } from 'nanoid'
 
 export default function createUniqueID(prefix='') {
-    const id = uuid();
-    return `${prefix}${id}`
+    const id = nanoid(4);
+    return `${prefix}-${id}`
 }

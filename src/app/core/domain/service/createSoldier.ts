@@ -1,6 +1,5 @@
 import { now } from "../../lib/DateHelper";
 import { Soldier } from "../model/Soldier";
-import createUniqueID from "./createUniqueID";
 
 export function createSoldier(name: string): Soldier {
     return {
