@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { RegisterService } from 'src/app/core/application/service/register.service';
-import { Soldier } from 'src/app/core/domain/model/Soldier';
 import { RouterService } from 'src/app/presentation/shared/service/router.service';
 
 @Component({
