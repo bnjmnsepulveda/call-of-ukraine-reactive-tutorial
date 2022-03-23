@@ -23,6 +23,8 @@ export class GameComponent implements OnInit {
   selectedRussianCity: RussianCity = null
   realtimeAttacks$: Observable<Attack> = null
 
+  notificationMessage: string = null 
+
   constructor(
     private starterGame: GameStarterService, 
     private game: GameService,
@@ -46,8 +48,17 @@ export class GameComponent implements OnInit {
     const saveAttackOnAppState$ = this.saveAttackOnAppState(this.realtimeAttacks$);
     // calculate ranking
     const calculateSoldierRanking$ = this.calculateSoldierRanking(saveAttackOnAppState$)
-    calculateSoldierRanking$.subscribe(soldierRanking => this.rankingService.saveSoldierRanking(soldierRanking))
+    calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+    // notify attack 
+    const notifyAttack$ = this.notifyAttack(this.realtimeAttacks$)
+    notifyAttack$.subscribe(message => this.notificationMessage = message)
     
+  }
+
+  notifyAttack(attack$: Observable<Attack>) {
+    return attack$.pipe(
+      map(attack => `${attack.soldier.name} ha atacado sin misericordia la ciudad de ${attack.city.name} Putin se esta inquietando`),
+    )
   }
 
   saveAttackOnAppState(attack$: Observable<Attack>) {
@@ -61,8 +72,7 @@ export class GameComponent implements OnInit {
       filter(attack => attack !== null),
       map(attack => attack.soldier.id),
       map(soldierId => this.attackState.getBySoldier(soldierId)),
-      map(attacks => calculateSoldierRanking(attacks)),
-      tap(ranking => console.log('ranking',ranking))
+      map(attacks => calculateSoldierRanking(attacks))
     )
   }
 
