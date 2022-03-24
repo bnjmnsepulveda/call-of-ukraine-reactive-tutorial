@@ -13,9 +13,6 @@ export function createRussianCity(props: Properties, healthPoints=1000): Russian
     return {
         id: createUniqueID(props.name),
         name: props.name,
-        deaths: 0,
-        healthPoints,
         location: props.location,
-        population: props.population
     }
 }

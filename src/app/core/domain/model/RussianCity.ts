@@ -1,11 +1,10 @@
 import { EntityBase } from "../../lib/EntityBase";
 import { MapLocation } from "./MapLocation";
+import { Target } from "./Target";
 
 export interface RussianCity extends EntityBase {
 
-    healthPoints: number;
-    population: number;
-    deaths: number;
+    targets?: Target[];
     location: MapLocation;
     
 }
