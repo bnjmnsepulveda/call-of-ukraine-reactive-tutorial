@@ -1,11 +1,11 @@
 import { EntityBase } from "../../lib/EntityBase";
-import { Damage } from "./Damage";
+import { Resource } from "./Resource";
 
 export interface Weapon extends EntityBase {
     
     description: string;
     category: string;
     points: number;
-    damage?: Damage;
+    damage: Resource;
     
 }

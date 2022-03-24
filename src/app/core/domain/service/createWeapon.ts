@@ -1,10 +1,13 @@
+import { Resource } from "../model/Resource";
 import { Weapon } from "../model/Weapon";
+import { createResource } from "./createTarget";
 import createUniqueID from "./createUniqueID";
 
 interface Properties {
     name: string; 
     description: string; 
     category: string;
+    damage: Partial<Resource>
 }
 
 export function createWeapon(props :Properties, attackPoints=100): Weapon {
@@ -13,6 +16,7 @@ export function createWeapon(props :Properties, attackPoints=100): Weapon {
         name: props.name,
         description: props.description,
         category: props.category,
-        points: attackPoints
+        points: attackPoints,
+        damage: createResource(props.damage)
     }
 }
