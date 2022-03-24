@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { reduce, map, interval, switchMap } from 'rxjs';
+import { map, interval, switchMap } from 'rxjs';
 import { Weapon } from '../../domain/model/Weapon';
 import { getRandomItem } from '../../lib/RandomHelper';
 import { WeaponStateService } from '../../store/service/weapon-state.service';

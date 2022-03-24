@@ -18,8 +18,6 @@ export class RankingService {
   }
 
   getSoldierRankingUpdate$() {
-    return this.soldierRankingState.selectSoldierRanking().pipe(
-
-    )
+    return this.soldierRankingState.selectSoldierRanking()
   }
 }

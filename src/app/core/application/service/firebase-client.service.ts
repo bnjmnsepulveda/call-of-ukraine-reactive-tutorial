@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app"
-import { DocumentData, Firestore, FirestoreError, getFirestore, QuerySnapshot } from "firebase/firestore"
+import { DocumentData, Firestore, FirestoreError, getDoc, getFirestore, QuerySnapshot } from "firebase/firestore"
 
 import { collection, query, onSnapshot } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
@@ -21,6 +21,12 @@ export class FirebaseClientService {
 
   constructor() {
     this.db = getFirestore();
+  }
+
+  existsDocument(collectionName: string, id: string) {
+    const docRef = doc(this.db, collectionName, id);
+    const docSnap = getDoc(docRef);
+    return from(docSnap.then(d => d.exists()))
   }
 
   saveDocument(collectionName: string, entity: any) {

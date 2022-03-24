@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { distinct, filter, map, Observable, of, reduce, scan, switchMap, tap } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { filter, map, Observable, tap } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
-import { GameStarterService } from 'src/app/core/application/service/game-starter.service';
-import { GameService } from 'src/app/core/application/service/game.service';
+import { RussianCityService } from 'src/app/core/application/service/russian-city.service';
 import { RankingService } from 'src/app/core/application/service/soldier-ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
 import { RussianCity } from 'src/app/core/domain/model/RussianCity';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
+import { getRussianCities } from 'src/app/core/domain/service/getRussianCities';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 
@@ -25,11 +25,10 @@ export class GameComponent implements OnInit {
 
   notificationMessage: string = null 
 
-  constructor(
-    private starterGame: GameStarterService, 
-    private game: GameService,
+  constructor( 
     private sessionState: SessionStateService,
     private ukraineArmyService: UkraineArmyService,
+    private russianCityService: RussianCityService,
     private attackService: AttackService,
     private attackState: AttackStateService,
     private rankingService: RankingService
@@ -37,9 +36,8 @@ export class GameComponent implements OnInit {
  
 
   ngOnInit(): void {
-
-    //this.starterGame.loadRussianCountries()
-    this.game.loadRussianCities()
+    // load russian cities
+    this.russianCityService.setRussianCities(getRussianCities())
     // set source realtime subscription
     this.realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     // subscribe source 

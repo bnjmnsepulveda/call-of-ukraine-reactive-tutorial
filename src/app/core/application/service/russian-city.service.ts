@@ -14,8 +14,8 @@ export class RussianCityService {
     return this.state.selectAll()
   }
 
-  updateRussianCityState(russianCity: RussianCity) {
-    this.state.save(russianCity)
+  setRussianCities(russianCities: RussianCity[]) {
+    this.state.saveAll(russianCities)
   }
-
+  
 }
