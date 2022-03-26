@@ -3,7 +3,8 @@
 <app-soldier-ranking></app-soldier-ranking>
 <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
 <div>
-    <app-weapon-detail [weapon]="selectedWeapon"></app-weapon-detail>
-    <app-select-russian-city *ngIf="selectedWeapon" (russianCityChange)="destroyCity($event)" ></app-select-russian-city>
+    <app-weapon-detail [weapon]="select?.weapon"></app-weapon-detail>
+    <!-- <app-select-russian-city *ngIf="select?.weapon" (russianCityChange)="destroyCity($event)" ></app-select-russian-city> -->
+    <app-select-target *ngIf="select?.weapon" (russianTargetChange)="destroyRussianTarget($event)"></app-select-target>
 </div>
 

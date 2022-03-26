@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { WeaponDetailComponent } from './weapon-detail/weapon-detail.component';
 import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.component';
 import { SharedModule } from '../../shared/shared.module';
+import { SelectTargetComponent } from './select-target/select-target.component';
 
 
 
@@ -16,7 +17,8 @@ import { SharedModule } from '../../shared/shared.module';
     SelectWeaponComponent,
     SelectRussianCityComponent,
     WeaponDetailComponent,
-    SoldierRankingComponent, 
+    SoldierRankingComponent,
+    SelectTargetComponent, 
   ],
   imports: [
     CommonModule,

@@ -2,13 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { filter, map, Observable, tap } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
 import { RussianCityService } from 'src/app/core/application/service/russian-city.service';
+import { RussianTargetService } from 'src/app/core/application/service/russian-target.service';
 import { RankingService } from 'src/app/core/application/service/soldier-ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
 import { RussianCity } from 'src/app/core/domain/model/RussianCity';
+import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
+import { Target } from 'src/app/core/domain/model/Target';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
+import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { getRussianCities } from 'src/app/core/domain/service/getRussianCities';
+import { getRussianTargets } from 'src/app/core/domain/service/getRussianTargets';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 
@@ -19,8 +24,10 @@ import { SessionStateService } from 'src/app/core/store/service/session-state.se
 })
 export class GameComponent implements OnInit {
 
-  selectedWeapon: Weapon = null
-  selectedRussianCity: RussianCity = null
+  select: any = selectDefaultValues()
+
+  // selectedWeapon: Weapon = null
+  // selectedRussianCity: RussianCity = null
   realtimeAttacks$: Observable<Attack> = null
 
   notificationMessage: string = null 
@@ -31,7 +38,8 @@ export class GameComponent implements OnInit {
     private russianCityService: RussianCityService,
     private attackService: AttackService,
     private attackState: AttackStateService,
-    private rankingService: RankingService
+    private rankingService: RankingService,
+    private russianTargetService: RussianTargetService
   ) { }
  
 
@@ -55,7 +63,8 @@ export class GameComponent implements OnInit {
 
   notifyAttack(attack$: Observable<Attack>) {
     return attack$.pipe(
-      map(attack => `${attack.soldier.name} ha atacado sin misericordia la ciudad de ${attack.city.name} Putin se esta inquietando`),
+      map(attack => createNotificationFromAttack(attack)),
+      map(attack => `${attack.soldiername} ha atacado sin misericordia a ${attack.target} en la ciudad de ${attack.city} Putin se esta inquietando`),
     )
   }
 
@@ -75,19 +84,31 @@ export class GameComponent implements OnInit {
   }
 
   takeRandomWeapon(weapon: Weapon) {
-    this.selectedWeapon = weapon
+    this.select.weapon = weapon
   }
 
-  destroyCity(russianCity: RussianCity) {
-    this.selectedRussianCity = russianCity
-    this.ukraineArmyService.attackRussianCity({
+  selectRussianCity(russianCity: RussianCity) {
+    this.select.russianCity = russianCity
+  }
+
+  destroyRussianTarget(russianTarget: RussianTarget) {
+    this.select.russianTarget = russianTarget
+    this.ukraineArmyService.attackRussianTarget({
       soldier: this.sessionState.getSoldier(),
-      city: this.selectedRussianCity,
-      weapon: this.selectedWeapon
+      russianTarget: this.select.russianTarget,
+      weapon: this.select.weapon,
+      city: null
     })
-    this.selectedRussianCity = null
-    this.selectedWeapon = null
   }
 
 
+}
+
+function selectDefaultValues() {
+  return {
+    weapon: null, 
+    russianCity: null,
+    target: null,
+    russianTarget: null
+  } as any
 }
