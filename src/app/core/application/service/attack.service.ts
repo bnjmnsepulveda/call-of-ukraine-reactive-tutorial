@@ -19,6 +19,7 @@ export class AttackService {
     
     const adapter = (data: DocumentData): Attack => ({ 
       id: data['id'],
+      russianTarget: data['russianTarget'],
       datetime: data['datetime'],
       soldier: data['soldier'], 
       city: data['city'], 
