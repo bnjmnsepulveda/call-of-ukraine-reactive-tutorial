@@ -1,23 +1,30 @@
 import { Injectable } from '@angular/core';
-import { map, switchMap, tap } from 'rxjs';
+import { CityRanking } from '../../domain/model/CityRanking';
 import { SoldierRanking } from '../../domain/model/SoldierRanking';
-import { AttackStateService } from '../../store/service/attack-state.service';
+import { CityRankingStateService } from '../../store/service/city-ranking-state.service';
 import { SoldierRankingStateService } from '../../store/service/soldier-ranking-state.service';
-import { AttackService } from './attack.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RankingService {
 
-  constructor(private soldierRankingState: SoldierRankingStateService) { }
-
+  constructor(private soldierRankingState: SoldierRankingStateService, private cityRankingState: CityRankingStateService) { }
 
   saveSoldierRanking(soldierranking: SoldierRanking) {
     this.soldierRankingState.upsert(soldierranking)
   }
 
+  saveRussianCityDamage(damage: CityRanking) {
+    this.cityRankingState.upsert(damage)
+  }
+
   getSoldierRankingUpdate$() {
     return this.soldierRankingState.selectSoldierRanking()
   }
+
+  getCityRanking() {
+    return this.cityRankingState.selectCityRanking(10)
+  }
+  
 }

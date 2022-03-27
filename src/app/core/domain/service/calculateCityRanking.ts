@@ -1,14 +1,12 @@
 import { Attack } from "../model/Attack";
 import { Resource } from "../model/Resource";
-import { RussianCityDamage } from "../model/RussianCityDamage";
-import createUniqueID from "./createUniqueID";
-
+import { CityRanking } from "../model/CityRanking";
 
 function updateRussianCityDamage(key: keyof Resource, resources: Resource, damage: Resource) {
     return resources[key] = Math.max(0, resources[key] - damage[key])
 }
 
-export function calculateRussianCityDamage(attacks: Attack[]): RussianCityDamage {
+export function calculateCityRanking(attacks: Attack[]): CityRanking {
     
     const russiantarget = attacks[0].russianTarget
     
@@ -33,9 +31,9 @@ export function calculateRussianCityDamage(attacks: Attack[]): RussianCityDamage
     }
 
     return {
-        id: createUniqueID(`${russiantarget.city}`),
+        id: russiantarget.city,
         name: russiantarget.city,
-        resources
+        ...resources
     }
     
 }

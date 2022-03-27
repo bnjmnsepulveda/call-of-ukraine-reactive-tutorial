@@ -18,4 +18,5 @@ export class SoldierRankingStateService {
   selectSoldierRanking(limitTo = 5) {
     return this.query.selectAll({ sortBy: 'points' , sortByOrder: Order.DESC, limitTo})
   }
+  
 }
