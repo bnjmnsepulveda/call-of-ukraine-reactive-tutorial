@@ -8,6 +8,7 @@ export function getRussianTargets(): RussianTarget[] {
         factory.createCivilianArea('moscow downtown', 'Moscow'),
         factory.createArmy('ejercito de liberacion 2', 'Moscow'),
         factory.createBunker('bunker de putin', 'stalingrado'),
-        factory.createAircraftCarrier('russian blattle ship', 'mar negro')
+        factory.createAircraftCarrier('russian blattle ship', 'mar negro'),
+        factory.createAircraftCarrier('aeropuerto', 'lenin')
     ]
 }

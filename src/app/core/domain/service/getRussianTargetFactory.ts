@@ -8,12 +8,12 @@ function createMilitaryBase(name: string, city: string): RussianTarget {
         city,
         name,
         resources: createResource({
-            buildings: 10,
+            buildings: 100,
             generals: 3,
-            soldiers: 17400,
-            tanks: 100,
-            warplanes: 37,
-            trucks: 120
+            soldiers: 174000,
+            tanks: 1000,
+            warplanes: 370,
+            trucks: 1200
         })
     }
 }
@@ -24,13 +24,13 @@ function createArmy(name: string, city: string): RussianTarget {
         name,
         city,
         resources: createResource({
-            buildings: 10,
+            buildings: 100,
             generals: 3,
-            soldiers: 50000,
-            tanks: 100,
-            warplanes: 400,
-            trucks: 120,
-            warships: 3
+            soldiers: 5000000,
+            tanks: 1000,
+            warplanes: 4000,
+            trucks: 1200,
+            warships: 30
         })
     }
 }
@@ -42,8 +42,8 @@ function createBunker(name: string, city: string): RussianTarget {
         city,
         resources: createResource({
             generals: 3,
-            soldiers: 100,
-            civilians: 5000
+            soldiers: 1000,
+            civilians: 500000
         })
     }
 }
@@ -55,9 +55,9 @@ function createAircraftCarrier(name: string, city: string): RussianTarget {
         city,
         resources: createResource({
             generals: 1,
-            soldiers: 5070,
-            tanks: 100,
-            warplanes: 130
+            soldiers: 50700,
+            tanks: 1000,
+            warplanes: 1300
         })
     }
 }
@@ -68,11 +68,12 @@ function createCivilianArea(name: string, city: string): RussianTarget {
         name,
         city,
         resources: createResource({
-        buildings: 30,
-        soldiers: 12603,
-        tanks: 83,
-        warplanes: 17,
-        trucks: 200
+        buildings: 3000,
+        civilians: 100222333,
+        soldiers: 1260300,
+        tanks: 830,
+        warplanes: 170,
+        trucks: 2000
     })}
 }
 
