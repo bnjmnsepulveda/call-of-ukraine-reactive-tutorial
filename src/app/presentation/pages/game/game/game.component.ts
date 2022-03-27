@@ -36,18 +36,18 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()  
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
     const calculateSoldierRanking$ = this.calculateSoldierRanking(saveAttackOnAppState$)
-    const calculateTargetResources$ = this.calculateCityRanking(saveAttackOnAppState$)
+    const calculateCityRanking$ = this.calculateCityRanking(saveAttackOnAppState$)
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
     // create subscription
     const realimeAttackSubscription = realtimeAttacks$.subscribe(a => console.log(`new attack`, a))
-    const calculateCityrankingSubscription = calculateTargetResources$.subscribe(a => this.rankingService.saveRussianCityDamage(a))
-    const calculateSoldierrankingSubscription = calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+    const calculateCityRankingSubscription = calculateCityRanking$.subscribe(a => this.rankingService.saveRussianCityDamage(a))
+    const calculateSoldierRankingSubscription = calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
     const notifyAttackSubscription = notifyAttack$.subscribe(message => this.notificationMessage = message)
     // add subscription to component base for cleanup all resources
     this.addSubscription(
       realimeAttackSubscription,
-      calculateCityrankingSubscription,
-      calculateSoldierrankingSubscription,
+      calculateCityRankingSubscription,
+      calculateSoldierRankingSubscription,
       notifyAttackSubscription
     )
     

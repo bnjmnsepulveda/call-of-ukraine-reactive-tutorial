@@ -9,7 +9,6 @@ function createMilitaryBase(name: string, city: string): RussianTarget {
         name,
         resources: createResource({
             buildings: 100,
-            generals: 3,
             soldiers: 174000,
             tanks: 1000,
             warplanes: 370,
@@ -25,7 +24,6 @@ function createArmy(name: string, city: string): RussianTarget {
         city,
         resources: createResource({
             buildings: 100,
-            generals: 3,
             soldiers: 5000000,
             tanks: 1000,
             warplanes: 4000,
@@ -41,7 +39,6 @@ function createBunker(name: string, city: string): RussianTarget {
         name,
         city,
         resources: createResource({
-            generals: 3,
             soldiers: 1000,
             civilians: 500000
         })
@@ -54,7 +51,6 @@ function createAircraftCarrier(name: string, city: string): RussianTarget {
         name,
         city,
         resources: createResource({
-            generals: 1,
             soldiers: 50700,
             tanks: 1000,
             warplanes: 1300

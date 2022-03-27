@@ -52,7 +52,6 @@ export function getWeapons(): Weapon[] {
                 soldiers: 75000,
                 tanks: 130,
                 trucks: 350,
-                generals: 5
             }
         }, 5000),
         createWeapon({

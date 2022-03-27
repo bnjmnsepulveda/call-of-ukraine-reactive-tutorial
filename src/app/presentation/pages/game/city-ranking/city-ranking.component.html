@@ -1,11 +1,9 @@
-<app-subtitle subtitle="RECURSOS RESTANTES DE CIUDADES" ></app-subtitle>
+<app-subtitle subtitle="RECURSOS RESTANTES DE CIUDADES RUSAS" ></app-subtitle>
 <div *ngIf="cityRanking.length > 0" >
     <p *ngFor="let cr of cityRanking">
         <b>{{ cr.name }}</b> 
         civiles: {{ cr.civilians }} 
         edificios {{ cr.buildings}} 
-        hospitales: {{cr.hospitals }} 
-        generales: {{ cr.generals }}
         soldiers: {{ cr.soldiers }} 
         vehiculos: {{ cr.trucks }}
         tanques: {{ cr.tanks}}

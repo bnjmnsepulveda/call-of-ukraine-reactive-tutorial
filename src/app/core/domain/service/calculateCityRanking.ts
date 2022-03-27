@@ -6,6 +6,10 @@ function updateRussianCityDamage(key: keyof Resource, resources: Resource, damag
     return resources[key] = Math.max(0, resources[key] - damage[key])
 }
 
+function updateRussianCityPercentage(key: keyof Resource, initialResources: Resource, damage: Resource) {
+
+}
+
 export function calculateCityRanking(attacks: Attack[]): CityRanking {
     
     const russiantarget = attacks[0].russianTarget
@@ -20,8 +24,6 @@ export function calculateCityRanking(attacks: Attack[]): CityRanking {
             soldiers: updateRussianCityDamage('soldiers', resources, damage),
             buildings: updateRussianCityDamage('buildings', resources, damage),
             civilians: updateRussianCityDamage('civilians', resources, damage),
-            generals: updateRussianCityDamage('generals', resources, damage),
-            hospitals: updateRussianCityDamage('hospitals', resources, damage),
             tanks: updateRussianCityDamage('tanks', resources, damage),
             trucks: updateRussianCityDamage('trucks', resources, damage),
             warplanes: updateRussianCityDamage('warplanes', resources, damage),
