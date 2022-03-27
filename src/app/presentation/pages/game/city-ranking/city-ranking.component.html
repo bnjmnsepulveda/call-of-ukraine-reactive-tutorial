@@ -1,7 +1,8 @@
 <app-subtitle subtitle="RECURSOS RESTANTES DE CIUDADES RUSAS" ></app-subtitle>
 <div *ngIf="cityRanking.length > 0" >
     <p *ngFor="let cr of cityRanking">
-        <b>{{ cr.name }}</b> 
+        <b>{{ cr.name }} %{{ cr.destructionPercentage | number:'1.0-1'}} esta destruida </b>
+        RECURSOS: {{ cr.totalResources }} restantes {{ cr.remainingResources }} 
         civiles: {{ cr.civilians }} 
         edificios {{ cr.buildings}} 
         soldiers: {{ cr.soldiers }} 

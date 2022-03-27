@@ -16,7 +16,7 @@ export class CityRankingStateService {
   }
 
   selectCityRanking(limitTo = 5) {
-    return this.query.selectAll({ sortBy: 'civilians' , sortByOrder: Order.DESC, limitTo})
+    return this.query.selectAll({ sortBy: 'destructionPercentage' , sortByOrder: Order.DESC, limitTo})
   }
 
 }
