@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { filter, map, Observable, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { concatMap, count, filter, flatMap, from, map, mergeMap, Observable, of, pluck, scan, switchMap, tap, toArray } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
 import { RussianCityService } from 'src/app/core/application/service/russian-city.service';
 import { RankingService } from 'src/app/core/application/service/soldier-ranking.service';
@@ -8,6 +8,7 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { RussianCity } from 'src/app/core/domain/model/RussianCity';
 import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
+import { calculateRussianCityDamage } from 'src/app/core/domain/service/calculateRussianCityDamage';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { getRussianCities } from 'src/app/core/domain/service/getRussianCities';
@@ -19,14 +20,11 @@ import { SessionStateService } from 'src/app/core/store/service/session-state.se
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   select: any = selectDefaultValues()
-
-  // selectedWeapon: Weapon = null
-  // selectedRussianCity: RussianCity = null
   realtimeAttacks$: Observable<Attack> = null
-
+  subscriptions: any[] = []
   notificationMessage: string = null 
 
   constructor( 
@@ -37,6 +35,10 @@ export class GameComponent implements OnInit {
     private attackState: AttackStateService,
     private rankingService: RankingService
   ) { }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe())
+  }
  
 
   ngOnInit(): void {
@@ -45,15 +47,22 @@ export class GameComponent implements OnInit {
     // set source realtime subscription
     this.realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     // subscribe source 
-    this.realtimeAttacks$.subscribe(a => console.log(`new attack`, a))
+    const realimeAttackSubscription = this.realtimeAttacks$.subscribe(a => console.log(`new attack`, a))
+    this.subscriptions.push(realimeAttackSubscription)
     // save on attack8
     const saveAttackOnAppState$ = this.saveAttackOnAppState(this.realtimeAttacks$);
     // calculate ranking
     const calculateSoldierRanking$ = this.calculateSoldierRanking(saveAttackOnAppState$)
-    calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+    const calculateSoldierrankingSubscription = calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+    this.subscriptions.push(calculateSoldierrankingSubscription)
+    // calculate resources
+    const calculateTargetResources$ = this.calculateTargetResources(saveAttackOnAppState$)
+    const calculateTargetResourcesSubscription = calculateTargetResources$.subscribe(a => console.log('attacks by city', a))
+    this.subscriptions.push(calculateTargetResourcesSubscription)
     // notify attack 
     const notifyAttack$ = this.notifyAttack(this.realtimeAttacks$)
-    notifyAttack$.subscribe(message => this.notificationMessage = message)
+    const notifyAttackSubscription = notifyAttack$.subscribe(message => this.notificationMessage = message)
+    this.subscriptions.push(notifyAttackSubscription)
     
   }
 
@@ -75,8 +84,17 @@ export class GameComponent implements OnInit {
       filter(attack => attack !== null),
       map(attack => attack.soldier.id),
       map(soldierId => this.attackState.getBySoldier(soldierId)),
-      map(attacks => calculateSoldierRanking(attacks))
+      map(attacks => calculateSoldierRanking(attacks)),
     )
+  }
+
+  calculateTargetResources(attack$: Observable<Attack>) {
+    return attack$.pipe(
+      pluck('russianTarget', 'city'),
+      map(cityname => this.attackState.getByCity(cityname)),
+      map(attacks => calculateRussianCityDamage(attacks))
+    )
+
   }
 
   takeRandomWeapon(weapon: Weapon) {
@@ -108,3 +126,4 @@ function selectDefaultValues() {
     russianTarget: null
   } as any
 }
+
