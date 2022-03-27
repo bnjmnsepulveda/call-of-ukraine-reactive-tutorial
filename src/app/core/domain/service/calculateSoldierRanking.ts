@@ -14,17 +14,12 @@ export function calculateSoldierRanking(attacks: Attack[]): SoldierRanking {
 }
 
 function getAttackedCities(attacks: Attack[]) {
-    const fromCities = attacks
-        .filter(attack => attack?.city)
-        .map(attack => attack.city.name)
+    
     const fromRussianTargets = attacks
         .filter(attack => attack?.russianTarget)
         .map(attack => attack.russianTarget.city)
-    const mergedList = [
-        ...fromCities,
-        ...fromRussianTargets
-    ]
+   
     return [
-        ...new Set(mergedList)
+        ...new Set(...fromRussianTargets)
     ]
 }

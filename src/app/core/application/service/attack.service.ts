@@ -22,7 +22,6 @@ export class AttackService {
       russianTarget: data['russianTarget'],
       datetime: data['datetime'],
       soldier: data['soldier'], 
-      city: data['city'], 
       weapon: data['weapon']
     })
 

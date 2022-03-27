@@ -1,17 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { concatMap, count, filter, flatMap, from, map, mergeMap, Observable, of, pluck, scan, Subscription, switchMap, tap, toArray } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
-import { RussianCityService } from 'src/app/core/application/service/russian-city.service';
 import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
-import { RussianCity } from 'src/app/core/domain/model/RussianCity';
 import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 import { calculateCityRanking } from 'src/app/core/domain/service/calculateCityRanking';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
-import { getRussianCities } from 'src/app/core/domain/service/getRussianCities';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
@@ -29,15 +26,12 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   constructor( 
     private sessionState: SessionStateService,
     private ukraineArmyService: UkraineArmyService,
-    private russianCityService: RussianCityService,
     private attackService: AttackService,
     private attackState: AttackStateService,
     private rankingService: RankingService
   ) { super() }
 
   ngOnInit(): void {
-    
-    this.russianCityService.setRussianCities(getRussianCities())
     // create observables
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()  
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
@@ -97,17 +91,12 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     this.select.weapon = weapon
   }
 
-  selectRussianCity(russianCity: RussianCity) {
-    this.select.russianCity = russianCity
-  }
-
   destroyRussianTarget(russianTarget: RussianTarget) {
     this.select.russianTarget = russianTarget
     this.ukraineArmyService.attackRussianTarget({
       soldier: this.sessionState.getSoldier(),
       russianTarget: this.select.russianTarget,
       weapon: this.select.weapon,
-      city: null
     })
   }
 }

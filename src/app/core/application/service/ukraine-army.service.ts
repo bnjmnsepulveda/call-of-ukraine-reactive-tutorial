@@ -10,10 +10,6 @@ export class UkraineArmyService {
 
   constructor(private attackService: AttackService) { }
 
-  attackRussianCity(attack: AttackRequestDTO) {
-    this.attackService.saveAttack(createAttack(attack))
-  }
-
   attackRussianTarget(attack: AttackRequestDTO) {
     this.attackService.saveAttack(createAttack(attack))
   }
