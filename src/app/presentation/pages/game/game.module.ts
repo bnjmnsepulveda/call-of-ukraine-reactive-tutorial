@@ -8,6 +8,7 @@ import { WeaponDetailComponent } from './weapon-detail/weapon-detail.component';
 import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SelectTargetComponent } from './select-target/select-target.component';
+import { CityRankingComponent } from './city-ranking/city-ranking.component';
 
 
 
@@ -18,7 +19,8 @@ import { SelectTargetComponent } from './select-target/select-target.component';
     SelectRussianCityComponent,
     WeaponDetailComponent,
     SoldierRankingComponent,
-    SelectTargetComponent, 
+    SelectTargetComponent,
+    CityRankingComponent, 
   ],
   imports: [
     CommonModule,

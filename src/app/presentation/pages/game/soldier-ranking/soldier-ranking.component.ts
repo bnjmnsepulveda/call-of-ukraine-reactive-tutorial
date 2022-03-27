@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RankingService } from 'src/app/core/application/service/soldier-ranking.service';
+import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { SoldierRanking } from 'src/app/core/domain/model/SoldierRanking';
 
 @Component({

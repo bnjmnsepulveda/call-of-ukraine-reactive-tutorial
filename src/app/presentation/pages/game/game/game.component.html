@@ -1,10 +1,10 @@
 <app-title title="Destroy Russia goverment for the world"></app-title>
 <app-notify [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
 <app-soldier-ranking></app-soldier-ranking>
+<app-city-ranking></app-city-ranking>
 <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
 <div>
     <app-weapon-detail [weapon]="select?.weapon"></app-weapon-detail>
-    <!-- <app-select-russian-city *ngIf="select?.weapon" (russianCityChange)="destroyCity($event)" ></app-select-russian-city> -->
     <app-select-target *ngIf="select?.weapon" (russianTargetChange)="destroyRussianTarget($event)"></app-select-target>
 </div>
 
