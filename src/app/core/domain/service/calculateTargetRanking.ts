@@ -1,8 +1,8 @@
 import { Attack } from "../model/Attack";
-import { CityRanking } from "../model/CityRanking";
+import { TargetRanking } from "../model/TargetRanking";
 import { calculateRemainigResources } from "./calculateRemainingResources";
 
-export function calculateRussianTargetRanking(attacks: Attack[]): CityRanking {
+export function calculateTargetRanking(attacks: Attack[]): TargetRanking {
 
     const russiantarget = attacks[0].russianTarget
 
