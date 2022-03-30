@@ -10,7 +10,7 @@ import { RouterService } from 'src/app/presentation/shared/service/router.servic
 })
 export class NewSoldierComponent {
 
-  name = new FormControl('benjamin');
+  name = new FormControl(null);
 
   constructor(
     private registerService: RegisterService,
