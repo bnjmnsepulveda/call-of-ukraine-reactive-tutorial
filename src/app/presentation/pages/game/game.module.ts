@@ -8,6 +8,7 @@ import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.compo
 import { SharedModule } from '../../shared/shared.module';
 import { SelectTargetComponent } from './select-target/select-target.component';
 import { CityRankingComponent } from './city-ranking/city-ranking.component';
+import { TargetRankingComponent } from './component/target-ranking/target-ranking.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CityRankingComponent } from './city-ranking/city-ranking.component';
     WeaponDetailComponent,
     SoldierRankingComponent,
     SelectTargetComponent,
-    CityRankingComponent, 
+    CityRankingComponent,
+    TargetRankingComponent, 
   ],
   imports: [
     CommonModule,

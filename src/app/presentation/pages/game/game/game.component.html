@@ -2,6 +2,7 @@
 <app-notify [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
 <app-soldier-ranking></app-soldier-ranking>
 <app-city-ranking></app-city-ranking>
+<app-target-ranking></app-target-ranking>
 <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
 <div>
     <app-weapon-detail [weapon]="select?.weapon"></app-weapon-detail>

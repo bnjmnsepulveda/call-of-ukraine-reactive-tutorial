@@ -7,6 +7,7 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 import { calculateCityRanking } from 'src/app/core/domain/service/calculateCityRanking';
+import { calculateRussianTargetRanking } from 'src/app/core/domain/service/calculateRussianTargetRanking';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
@@ -35,20 +36,25 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create observables
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()  
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
-    const calculateSoldierRanking$ = this.calculateSoldierRanking(saveAttackOnAppState$)
-    const calculateCityRanking$ = this.calculateCityRanking(saveAttackOnAppState$)
+    const calculateSoldierRanking$ = this.calculateSoldierRanking(realtimeAttacks$)
+    const calculateCityRanking$ = this.calculateCityRanking(realtimeAttacks$)
+    const calculateRussiantargetRanking$ = this.calculateRussianTargetRanking(realtimeAttacks$)
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
     // create subscription
+    const saveAttackOnAppStataSubscription = saveAttackOnAppState$.subscribe()
     const realimeAttackSubscription = realtimeAttacks$.subscribe(a => console.log(`new attack`, a))
     const calculateCityRankingSubscription = calculateCityRanking$.subscribe(a => this.rankingService.saveRussianCityDamage(a))
     const calculateSoldierRankingSubscription = calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+    const calculateTargetRankingSubscription = calculateRussiantargetRanking$.subscribe(ranking => this.rankingService.saveRussianTargetRanking(ranking))
     const notifyAttackSubscription = notifyAttack$.subscribe(message => this.notificationMessage = message)
     // add subscription to component base for cleanup all resources
     this.addSubscription(
+      saveAttackOnAppStataSubscription,
       realimeAttackSubscription,
       calculateCityRankingSubscription,
       calculateSoldierRankingSubscription,
-      notifyAttackSubscription
+      notifyAttackSubscription,
+      calculateTargetRankingSubscription
     )
     
   }
@@ -84,6 +90,14 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
       pluck('russianTarget', 'city'),
       map(cityname => this.attackState.getByCity(cityname)),
       map(attacks => calculateCityRanking(attacks))
+    )
+  }
+
+  calculateRussianTargetRanking(attack$: Observable<Attack>) {
+    return attack$.pipe(
+      pluck('russianTarget', 'name'),
+      map(targetname => this.attackState.getByRussianTarget(targetname)),
+      map(attacks => calculateRussianTargetRanking(attacks))
     )
   }
 

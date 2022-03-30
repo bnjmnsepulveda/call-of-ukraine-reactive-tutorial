@@ -1,0 +1,14 @@
+<app-subtitle subtitle="RANKING OBJETIVOS" ></app-subtitle>
+<div *ngIf="rankings.length > 0" >
+    <p *ngFor="let ranking of rankings">
+        <b>{{ ranking.name }} %{{ ranking.destructionPercentage | number:'1.0-1'}} esta destruida </b>
+        RECURSOS: {{ ranking.totalResources }} restantes {{ ranking.remainingResources }} 
+        civiles: {{ ranking.civilians }} 
+        edificios {{ ranking.buildings}} 
+        soldiers: {{ ranking.soldiers }} 
+        vehiculos: {{ ranking.trucks }}
+        tanques: {{ ranking.tanks}}
+        aviones: {{ ranking.warplanes }}
+        barcos de guerra {{ ranking.warships }}
+    </p>
+</div>
