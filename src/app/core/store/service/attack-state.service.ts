@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Order } from '@datorama/akita';
 import { Attack } from '../../domain/model/Attack';
 import { AttackQuery } from '../attack/attack.query';
 import { AttackStore } from '../attack/attack.store';
@@ -22,7 +23,11 @@ export class AttackStateService {
   }
 
   getByCity(city: string) {
-    return this.query.getAll({ filterBy: entity => entity.russianTarget.city === city })
+    return this.query.getAll({ filterBy: entity => entity.russianTarget.city === city, sortBy: 'datetime' ,sortByOrder: Order.ASC })
+  }
+
+  getByRussianTarget(target: string) {
+    return this.query.getAll({ filterBy: entity => entity.russianTarget.name === target, sortBy: 'datetime' ,sortByOrder: Order.ASC })
   }
 
 }
