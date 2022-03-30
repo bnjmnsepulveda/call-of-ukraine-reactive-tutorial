@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { concatMap, count, filter, flatMap, from, map, mergeMap, Observable, of, pluck, scan, Subscription, switchMap, tap, toArray } from 'rxjs';
+import { concatMap, count, filter, flatMap, forkJoin, from, map, merge, mergeMap, Observable, of, pluck, scan, Subscription, switchMap, tap, toArray, zip } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
 import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
@@ -7,12 +7,13 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 import { calculateCityRanking } from 'src/app/core/domain/service/calculateCityRanking';
-import { calculateRussianTargetRanking } from 'src/app/core/domain/service/calculateRussianTargetRanking';
+import { calculateTargetRanking } from 'src/app/core/domain/service/calculateTargetRanking';
 import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
+import { SoldierAttackDTO } from 'src/app/core/application/dto/SoldierAttackDTO';
 
 @Component({
   selector: 'app-game',
@@ -36,27 +37,15 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create observables
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()  
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
-    const calculateSoldierRanking$ = this.calculateSoldierRanking(realtimeAttacks$)
-    const calculateCityRanking$ = this.calculateCityRanking(realtimeAttacks$)
-    const calculateRussiantargetRanking$ = this.calculateRussianTargetRanking(realtimeAttacks$)
+    const ranking$ = this.calculateRanking(realtimeAttacks$)
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
-    // create subscription
-    const saveAttackOnAppStataSubscription = saveAttackOnAppState$.subscribe()
-    const realimeAttackSubscription = realtimeAttacks$.subscribe(a => console.log(`new attack`, a))
-    const calculateCityRankingSubscription = calculateCityRanking$.subscribe(a => this.rankingService.saveRussianCityDamage(a))
-    const calculateSoldierRankingSubscription = calculateSoldierRanking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
-    const calculateTargetRankingSubscription = calculateRussiantargetRanking$.subscribe(ranking => this.rankingService.saveRussianTargetRanking(ranking))
-    const notifyAttackSubscription = notifyAttack$.subscribe(message => this.notificationMessage = message)
-    // add subscription to component base for cleanup all resources
+    // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
-      saveAttackOnAppStataSubscription,
-      realimeAttackSubscription,
-      calculateCityRankingSubscription,
-      calculateSoldierRankingSubscription,
-      notifyAttackSubscription,
-      calculateTargetRankingSubscription
+      saveAttackOnAppState$.subscribe(),
+      realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
+      notifyAttack$.subscribe(message => this.notificationMessage = message),
+      ranking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
     )
-    
   }
 
   ngOnDestroy(): void {
@@ -76,12 +65,20 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     )
   }
 
-  calculateSoldierRanking(attack$: Observable<Attack>) {
-    return attack$.pipe(
-      filter(attack => attack !== null),
-      map(attack => attack.soldier.id),
-      map(soldierId => this.attackState.getBySoldier(soldierId)),
-      map(attacks => calculateSoldierRanking(attacks)),
+  calculateRanking(attack$: Observable<Attack>) {
+    const cities$ = this.calculateCityRanking(attack$)
+    const targets$ = this.calculateTargetRanking(attack$)
+    const soldierAttack$ = attack$.pipe(map(attack => ({ soldier: attack.soldier, weapon: attack.weapon } as SoldierAttackDTO)))
+    return zip(
+     cities$,
+     targets$,
+     soldierAttack$
+    ).pipe(
+      map(([city, target, soldierAttack]) =>({ city, target, soldierAttack })),
+      tap(ranking => this.rankingService.saveRussianCityDamage(ranking.city)),
+      tap(ranking => this.rankingService.saveTargetRanking(ranking.target)),
+      map(ranking => calculateSoldierRanking(ranking.city, ranking.target, ranking.soldierAttack.soldier, ranking.soldierAttack.weapon)),
+     
     )
   }
 
@@ -93,11 +90,11 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     )
   }
 
-  calculateRussianTargetRanking(attack$: Observable<Attack>) {
+  calculateTargetRanking(attack$: Observable<Attack>) {
     return attack$.pipe(
       pluck('russianTarget', 'name'),
       map(targetname => this.attackState.getByRussianTarget(targetname)),
-      map(attacks => calculateRussianTargetRanking(attacks))
+      map(attacks => calculateTargetRanking(attacks))
     )
   }
 
