@@ -1,6 +1,15 @@
 <app-subtitle subtitle="RANKING SOLDADOS MAS CHOROS!!!" ></app-subtitle>
 <div *ngIf="soldierRankinks.length > 0" >
     <p *ngFor="let sr of soldierRankinks">
-        {{ sr.soldiername }} tiene {{ sr.points }} puntos
+        {{ sr.soldiername }} HP: {{ sr.points }} 
+        [ 
+        civiles: {{ sr.statistics.civilians }}
+        edificios: {{ sr.statistics.buildings}} 
+        soldiers: {{ sr.statistics.soldiers}} 
+        vehiculos: {{ sr.statistics.trucks}} 
+        tanques: {{ sr.statistics.tanks}}
+        aviones: {{ sr.statistics.warplanes}}
+        barcos: {{ sr.statistics.warships}}  
+        ]
     </p>
 </div>
