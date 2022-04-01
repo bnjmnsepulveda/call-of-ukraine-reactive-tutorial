@@ -1,7 +1,7 @@
-<h2>SELECCIONA TU MALDITA ARMA Y PELEA CONTRA LA PERRA DE RUSIA</h2>
-<div *ngIf="weapon">
-    <h3>{{ weapon.name }}</h3>
-    <p>{{ weapon.description }}</p>
-    <button (click)="getWeapon()">TOMAR ARMA</button>
+<div class="has-background-warning">
+    <h2 class="subtitle is-danger">TOMA RAPIDO UN ARMA!!!</h2>
+    <div *ngIf="weapon">
+        <h3>{{ weapon.name }}</h3>
+        <button (click)="getWeapon()">TOMAR ARMA</button>
+    </div>
 </div>
-

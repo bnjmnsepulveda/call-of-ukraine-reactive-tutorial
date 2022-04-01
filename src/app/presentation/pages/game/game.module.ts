@@ -9,6 +9,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { SelectTargetComponent } from './select-target/select-target.component';
 import { CityRankingComponent } from './city-ranking/city-ranking.component';
 import { TargetRankingComponent } from './component/target-ranking/target-ranking.component';
+import { DamageValueComponent } from './component/damage-value/damage-value.component';
+import { SoldierPointsComponent } from './component/soldier-points/soldier-points.component';
+import { ResourcePointsComponent } from './component/resource-points/resource-points.component';
 
 
 @NgModule({
@@ -19,7 +22,10 @@ import { TargetRankingComponent } from './component/target-ranking/target-rankin
     SoldierRankingComponent,
     SelectTargetComponent,
     CityRankingComponent,
-    TargetRankingComponent, 
+    TargetRankingComponent,
+    DamageValueComponent,
+    SoldierPointsComponent,
+    ResourcePointsComponent, 
   ],
   imports: [
     CommonModule,

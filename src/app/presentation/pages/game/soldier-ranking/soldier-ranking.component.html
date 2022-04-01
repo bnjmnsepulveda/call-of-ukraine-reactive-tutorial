@@ -1,15 +1,24 @@
-<app-subtitle subtitle="RANKING SOLDADOS MAS CHOROS!!!" ></app-subtitle>
-<div *ngIf="soldierRankinks.length > 0" >
-    <p *ngFor="let sr of soldierRankinks">
-        {{ sr.soldiername }} HP: {{ sr.points }} 
-        [ 
-        civiles: {{ sr.statistics.civilians }}
-        edificios: {{ sr.statistics.buildings}} 
-        soldiers: {{ sr.statistics.soldiers}} 
-        vehiculos: {{ sr.statistics.trucks}} 
-        tanques: {{ sr.statistics.tanks}}
-        aviones: {{ sr.statistics.warplanes}}
-        barcos: {{ sr.statistics.warships}}  
-        ]
-    </p>
+<div class="container  has-text-centered">
+
+  <nav class="panel">
+
+    <p class="panel-heading">SOLDADOS MAS CHOROS!!!</p>
+
+    <div *ngIf="soldierRankinks.length > 0">
+      <a *ngFor="let sr of soldierRankinks" class="panel-block is-active is-size-7">
+        <soldier-points [soldiername]="sr.soldiername"></soldier-points>
+        <resource-points [resources]="sr.statistics"></resource-points>
+        <div class="column has-text-danger is-size-6 has-text-weight-bold">
+          {{ sr.points }}
+        </div>
+      </a>
+    </div>
+
+    <div class="panel-block">
+      <button class="button is-link is-outlined is-fullwidth">
+        TRAICIONA A UN MIEMBRO DE LA LEGION
+      </button>
+    </div>
+
+  </nav>
 </div>

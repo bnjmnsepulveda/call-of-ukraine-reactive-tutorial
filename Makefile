@@ -10,6 +10,9 @@ create-service:
 create-component:
 	ng generate component --skip-tests=true $(p)
 
+create-flat-component:
+	 ng generate component --skip-tests --inline-template --inline-style $(p)
+
 create-entity-state:
 	ng generate entity-store core/store/$(n)/$(n)
 	ng generate entity-query core/store/$(n)/$(n)
