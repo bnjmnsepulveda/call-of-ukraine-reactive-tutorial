@@ -1,15 +1,9 @@
-<app-subtitle subtitle="RECURSOS RESTANTES DE CIUDADES RUSAS" ></app-subtitle>
-<div *ngIf="cityRanking.length > 0" >
-    <p *ngFor="let cr of cityRanking">
-        <b>{{ cr.name }} %{{ cr.destructionPercentage | number:'1.0-1'}} esta destruida </b>
-        RECURSOS: {{ cr.totalResources }} restantes {{ cr.remainingResources }} 
-        civiles: {{ cr.civilians }} 
-        edificios {{ cr.buildings}} 
-        soldiers: {{ cr.soldiers }} 
-        vehiculos: {{ cr.trucks }}
-        tanques: {{ cr.tanks}}
-        aviones: {{ cr.warplanes }}
-        barcos de guerra {{ cr.warships }}
-        
-    </p>
-</div>
+<app-panel [title]="'CIUDADES RUSAS'">
+    <div *ngIf="cityRanking.length > 0" >
+        <a  *ngFor="let cr of cityRanking" class="panel-block is-active is-size-7">
+            <city-resources [ranking]="cr"></city-resources>
+            <resource-points [resources]="mapToResources(cr)"></resource-points>
+           
+        </a>
+    </div>
+</app-panel>

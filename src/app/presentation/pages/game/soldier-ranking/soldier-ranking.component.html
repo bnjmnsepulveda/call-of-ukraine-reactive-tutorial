@@ -1,9 +1,5 @@
-<div class="container  has-text-centered">
-
-  <nav class="panel">
-
-    <p class="panel-heading">SOLDADOS MAS CHOROS!!!</p>
-
+<app-panel [title]="'SOLDADOS MAS CHOROS!!!'">
+  
     <div *ngIf="soldierRankinks.length > 0">
       <a *ngFor="let sr of soldierRankinks" class="panel-block is-active is-size-7">
         <soldier-points [soldiername]="sr.soldiername"></soldier-points>
@@ -20,5 +16,4 @@
       </button>
     </div>
 
-  </nav>
-</div>
+</app-panel>

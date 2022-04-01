@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { CityRanking } from 'src/app/core/domain/model/CityRanking';
+import { Resource } from 'src/app/core/domain/model/Resource';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
 
 @Component({
@@ -20,6 +21,12 @@ export class CityRankingComponent extends ReactiveComponent implements OnInit, O
     )
   }
 
+  mapToResources(ranking: CityRanking) {
+    return {
+      ...ranking
+    } as Resource
+  }
+  
   ngOnDestroy(): void {
    this.unsubscribeComponent()
   }

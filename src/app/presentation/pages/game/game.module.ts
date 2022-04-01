@@ -12,6 +12,8 @@ import { TargetRankingComponent } from './component/target-ranking/target-rankin
 import { DamageValueComponent } from './component/damage-value/damage-value.component';
 import { SoldierPointsComponent } from './component/soldier-points/soldier-points.component';
 import { ResourcePointsComponent } from './component/resource-points/resource-points.component';
+import { DestructionPercentageComponent } from './component/destruction-percentage/destruction-percentage.component';
+import { CityResourcesComponent } from './component/city-resources/city-resources.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { ResourcePointsComponent } from './component/resource-points/resource-po
     TargetRankingComponent,
     DamageValueComponent,
     SoldierPointsComponent,
-    ResourcePointsComponent, 
+    ResourcePointsComponent,
+    DestructionPercentageComponent,
+    CityResourcesComponent, 
   ],
   imports: [
     CommonModule,
