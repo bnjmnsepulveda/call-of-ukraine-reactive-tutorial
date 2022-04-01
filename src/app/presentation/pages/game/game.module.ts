@@ -14,6 +14,7 @@ import { SoldierPointsComponent } from './component/soldier-points/soldier-point
 import { ResourcePointsComponent } from './component/resource-points/resource-points.component';
 import { DestructionPercentageComponent } from './component/destruction-percentage/destruction-percentage.component';
 import { CityResourcesComponent } from './component/city-resources/city-resources.component';
+import { TargetResourcesComponent } from './component/target-resources/target-resources.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CityResourcesComponent } from './component/city-resources/city-resource
     SoldierPointsComponent,
     ResourcePointsComponent,
     DestructionPercentageComponent,
-    CityResourcesComponent, 
+    CityResourcesComponent,
+    TargetResourcesComponent, 
   ],
   imports: [
     CommonModule,
