@@ -7,7 +7,7 @@ import { WeaponDetailComponent } from './weapon-detail/weapon-detail.component';
 import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SelectTargetComponent } from './select-target/select-target.component';
-import { CityRankingComponent } from './city-ranking/city-ranking.component';
+import { CityRankingComponent } from './component/city-ranking/city-ranking.component';
 import { TargetRankingComponent } from './component/target-ranking/target-ranking.component';
 import { DamageValueComponent } from './component/damage-value/damage-value.component';
 import { SoldierPointsComponent } from './component/soldier-points/soldier-points.component';
@@ -15,6 +15,8 @@ import { ResourcePointsComponent } from './component/resource-points/resource-po
 import { DestructionPercentageComponent } from './component/destruction-percentage/destruction-percentage.component';
 import { CityResourcesComponent } from './component/city-resources/city-resources.component';
 import { TargetResourcesComponent } from './component/target-resources/target-resources.component';
+import { WhacAMoleComponent } from './component/whac-a-mole/whac-a-mole.component';
+import { MedalSummaryComponent } from './component/medal-summary/medal-summary.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { TargetResourcesComponent } from './component/target-resources/target-re
     ResourcePointsComponent,
     DestructionPercentageComponent,
     CityResourcesComponent,
-    TargetResourcesComponent, 
+    TargetResourcesComponent,
+    WhacAMoleComponent,
+    MedalSummaryComponent, 
   ],
   imports: [
     CommonModule,

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { concatMap, count, filter, flatMap, forkJoin, from, map, merge, mergeMap, Observable, of, pluck, scan, Subscription, switchMap, tap, toArray, zip } from 'rxjs';
+import { concatMap, count, delay, filter, flatMap, forkJoin, from, map, merge, mergeMap, Observable, of, onErrorResumeNext, pluck, scan, Subscription, switchMap, tap, toArray, zip } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
 import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
@@ -14,16 +14,44 @@ import { AttackStateService } from 'src/app/core/store/service/attack-state.serv
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
 import { SoldierAttackDTO } from 'src/app/core/application/dto/SoldierAttackDTO';
+import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO';
+import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGameOverDTO';
 
 @Component({
   selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css']
+  template: `
+  <div class="container  has-text-centered mt-6 is-fluid">
+    <h1 class="title is-1">Centro de mando soldado</h1>
+
+    <app-notify class="m-3" [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
+    
+    <div class="columns">
+        <div class="column is-5">
+            <app-soldier-ranking></app-soldier-ranking>
+            <app-target-ranking></app-target-ranking>
+        </div>
+        <div class="column is-7">
+            <app-whac-a-mole [seconds]="gameDuration" [delay]="1000" (onAttack)="onAttack($event)" (onGameOver)="onWhacaMoleGameOver($event)">
+            </app-whac-a-mole>
+            <!-- <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
+            <div>
+                <app-weapon-detail [weapon]="select?.weapon"></app-weapon-detail>
+                <app-select-target *ngIf="select?.weapon" (russianTargetChange)="destroyRussianTarget($event)"></app-select-target>
+            </div> -->
+        </div>
+        <!-- <div class="column">
+            <app-target-ranking></app-target-ranking>
+            <app-city-ranking></app-city-ranking>
+        </div> -->
+    </div>
+  </div>
+  `
 })
 export class GameComponent extends ReactiveComponent implements OnInit, OnDestroy {
 
   select: any = selectDefaultValues()
   notificationMessage: string = null 
+  gameDuration = 3
 
   constructor( 
     private sessionState: SessionStateService,
@@ -110,6 +138,21 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
       weapon: this.select.weapon,
     })
   }
+
+  onAttack(attack: AttackRequestDTO) {
+    this.ukraineArmyService.attackRussianTarget(attack)
+  }
+
+  onWhacaMoleGameOver(result: WhacaMoleGameOverDTO) {
+    console.log('Wahcmaole points', result.points)
+    of(result).pipe(
+      delay(3000)
+    ).subscribe(result => {
+      console.log('trying to reload game')
+      this.gameDuration = 15
+    })
+  }
+
 }
 
 function selectDefaultValues() {

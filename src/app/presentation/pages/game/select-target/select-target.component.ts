@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { RussianTargetService } from 'src/app/core/application/service/russian-target.service';
 import { RussianTarget } from 'src/app/core/domain/model/RussianTarget';
-import { getRussianTargets } from 'src/app/core/domain/service/getRussianTargets';
 
 @Component({
   selector: 'app-select-target',
@@ -12,16 +12,17 @@ export class SelectTargetComponent implements OnInit {
 
   formGroup: FormGroup;
   russianTarget = new FormControl(null)
-  russianTargets: RussianTarget[] = getRussianTargets()
+  russianTargets: RussianTarget[] = []
   @Output() 
   russianTargetChange: EventEmitter<RussianTarget> = new EventEmitter<RussianTarget>();
   
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private russiantargetService: RussianTargetService) { }
 
   ngOnInit(): void {
     this.formGroup = this.fb.group({
       russianTarget: [null]
     })
+    this.russianTargets = this.russiantargetService.all()
   }
 
   submit(){
