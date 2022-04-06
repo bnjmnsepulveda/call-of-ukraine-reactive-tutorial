@@ -17,6 +17,7 @@ import { CityResourcesComponent } from './component/city-resources/city-resource
 import { TargetResourcesComponent } from './component/target-resources/target-resources.component';
 import { WhacAMoleComponent } from './component/whac-a-mole/whac-a-mole.component';
 import { MedalSummaryComponent } from './component/medal-summary/medal-summary.component';
+import { GhostOfKievComponent } from './component/ghost-of-kiev/ghost-of-kiev.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { MedalSummaryComponent } from './component/medal-summary/medal-summary.c
     CityResourcesComponent,
     TargetResourcesComponent,
     WhacAMoleComponent,
-    MedalSummaryComponent, 
+    MedalSummaryComponent,
+    GhostOfKievComponent, 
   ],
   imports: [
     CommonModule,

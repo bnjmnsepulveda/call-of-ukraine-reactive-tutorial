@@ -31,6 +31,7 @@ import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGame
             <app-target-ranking></app-target-ranking>
         </div>
         <div class="column is-7">
+            <app-ghost-of-kiev></app-ghost-of-kiev>
             <app-whac-a-mole [seconds]="gameDuration" [delay]="1000" (onAttack)="onAttack($event)" (onGameOver)="onWhacaMoleGameOver($event)">
             </app-whac-a-mole>
             <!-- <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
