@@ -23,7 +23,7 @@ export class AttackStateService {
   }
 
   getByCity(city: string) {
-    return this.query.getAll({ filterBy: entity => entity.russianTarget.city === city, sortBy: 'datetime' ,sortByOrder: Order.ASC })
+    return this.query.getAll({ filterBy: entity => entity.russianTarget?.city === city, sortBy: 'datetime' ,sortByOrder: Order.ASC })
   }
 
   getByRussianTarget(target: string) {

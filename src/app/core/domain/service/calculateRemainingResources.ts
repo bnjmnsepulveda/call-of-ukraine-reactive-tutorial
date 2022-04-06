@@ -29,33 +29,35 @@ export function calculateRemainigResources(attacks: Attack[]): SummaryResources 
     
     const resourceAndDamage = attacks.map(attack => ({ resource: attack.russianTarget.resources, damage: attack.weapon.damage }))
     
-    let resources = {
+    const targetName = attacks[0].russianTarget.name
+    
+    let initialResources = {
         ...attacks[0].russianTarget.resources
     }
 
     for (let rd of resourceAndDamage) {
         const damage = rd.damage
-        resources = {
-            soldiers: updateRussianCityDamage('soldiers', resources, damage),
-            buildings: updateRussianCityDamage('buildings', resources, damage),
-            civilians: updateRussianCityDamage('civilians', resources, damage),
-            tanks: updateRussianCityDamage('tanks', resources, damage),
-            trucks: updateRussianCityDamage('trucks', resources, damage),
-            warplanes: updateRussianCityDamage('warplanes', resources, damage),
-            warships: updateRussianCityDamage('warships', resources, damage),
+        initialResources = {
+            soldiers: updateRussianCityDamage('soldiers', initialResources, damage),
+            buildings: updateRussianCityDamage('buildings', initialResources, damage),
+            civilians: updateRussianCityDamage('civilians', initialResources, damage),
+            tanks: updateRussianCityDamage('tanks', initialResources, damage),
+            trucks: updateRussianCityDamage('trucks', initialResources, damage),
+            warplanes: updateRussianCityDamage('warplanes', initialResources, damage),
+            warships: updateRussianCityDamage('warships', initialResources, damage),
         }
 
     }
 
     const totalResources = getTotalResources(attacks[0].russianTarget.resources)
-    const remainingResources = getTotalResources(resources)
+    const remainingResources = getTotalResources(initialResources)
     const destructionPercentage = 100 - ((remainingResources * 100) / totalResources)
 
     return {
         destructionPercentage,
         remainingResources,
         totalResources,
-        ...resources
+        ...initialResources
     }
     
 }
