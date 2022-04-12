@@ -26,24 +26,30 @@ interface Drawing {
     name: string;
     type: DrawingType;
 }
+interface SquareDrawProperties {
+    column: string,
+    row: number,
+    name: string,
+    type: DrawingType
+}
+
 //rename to DrawPosition
 export class SquareDraw {
 
+    public readonly column: string
+    public readonly row: number
     public readonly drawing: Drawing
 
     get key() {
         return `${this.column}-${this.row}`
     }
 
-    constructor(
-        public readonly column: string,
-        public readonly row: number,
-        public readonly drawingName: string,
-        public readonly drawingType: DrawingType
-    ) { 
+    constructor(properties: SquareDrawProperties) { 
+        this.column = properties.column
+        this.row = properties.row
         this.drawing = {
-            name: drawingName,
-            type: drawingType
+            name: properties.name,
+            type: properties.type
         }
     }
 

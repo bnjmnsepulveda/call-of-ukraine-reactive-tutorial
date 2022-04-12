@@ -54,11 +54,11 @@ describe('Screen', () => {
 
     it('must be delete drawing',()=>{
         const squares = createSquaresBySize(3, 3)
-        let result = draw(squares, new SquareDraw('A', 2, 'jet', 'shooter' ))
-        result = draw(result, new SquareDraw('B', 3, 'warplane', 'shooter' ))
+        let result = draw(squares, new SquareDraw({column: 'A', row: 2, name: 'jet', type: 'shooter' }))
+        result = draw(result, new SquareDraw({ column: 'B', row: 3, name: 'warplane', type: 'shooter' }))
 
          result.map(x => x.drawings).forEach(x => console.log(x))
-        result = erase(squares, new SquareDraw('A', 2,'jet', 'boom' ))
+        result = erase(squares, new SquareDraw({column: 'A', row: 2, name:'jet', type: 'boom' }))
         result.map(x => x.drawings).forEach(x => console.log(x))
     })
 })

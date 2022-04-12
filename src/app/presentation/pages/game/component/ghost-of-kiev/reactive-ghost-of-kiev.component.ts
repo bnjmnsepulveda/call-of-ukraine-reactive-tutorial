@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { concat, concatAll, concatMap, delay, filter, from, fromEvent, generate, interval, map, merge, mergeMap, Observable, of, startWith, switchMap, take, takeWhile, tap, timeInterval, zip } from 'rxjs';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
-import { erase, createSquaresBySize, draw, Square, SquareDraw, createColumns, createRows, createSquares } from './model/Square';
+import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares } from './model/Square';
 
 @Component({
   selector: 'app-reactive-ghost-of-kiev',
@@ -69,7 +69,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   squares: Square[] = []
   columns: string[] = []
   rows: number[] = []
-  squareDrawShooter: SquareDraw = new SquareDraw('H', 14, 'ghost-of-kiev','shooter')
+  squareDrawShooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter'})
 
   @ViewChild('screen', { static: true }) screen: ElementRef;
 
@@ -80,10 +80,9 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
 
     this.addSubscription(
-      // this.moveGreenItem().subscribe(x => this.squares = x, err => console.log(err), () => console.log(this.squares)),
-      // this.moveRussian().subscribe(x => this.squares = x),
       this.onMoveShooter().subscribe(sd => this.subscribeToDrawingSquare(sd)),
-      this.onShoot().subscribe(sd => this.subscribeToDrawingSquare(sd))
+      this.onShoot().subscribe(sd => this.subscribeToDrawingSquare(sd)),
+      this.movingRussianTroop().subscribe(sd => this.subscribeToDrawingSquare(sd))
       //this.ghostOfKievShooting().subscribe(x => this.drawingSquare(this.squares, x))
     )
   }
@@ -151,19 +150,41 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   //#region Game observables
 
-  moveDrawing(direction: 'up' | 'down', intervaltime: number, initialDrawing: SquareDraw) {
+  moveDrawing(direction: 'up' | 'down' | 'right' | 'left', intervaltime: number, initialDrawing: SquareDraw) {
 
     const iterators = {
       up: (squareDraw: SquareDraw) => {
-        let row = this.getPrevRow(squareDraw.row)
-        return new SquareDraw(squareDraw.column, row, squareDraw.drawing.name,squareDraw.drawing.type)
+        return new SquareDraw({ 
+          column: squareDraw.column, 
+          row: this.getPrevRow(squareDraw.row), 
+          name: squareDraw.drawing.name,
+          type: squareDraw.drawing.type
+        })
       },
       down: (squareDraw: SquareDraw) => {
-        let row = this.getNextRow(squareDraw.row)
-        return new SquareDraw(squareDraw.column, row, squareDraw.drawing.name, squareDraw.drawing.type)
+        return new SquareDraw({
+          column: squareDraw.column, 
+          row: this.getNextRow(squareDraw.row), 
+          name: squareDraw.drawing.name, 
+          type: squareDraw.drawing.type
+        })
       },
-      // right: (squareDraw: SquareDraw) => new SquareDraw(squareDraw.column, squareDraw.row + 1, squareDraw.drawing),
-      // left: (squareDraw: SquareDraw) => new SquareDraw(squareDraw.column, squareDraw.row - 1, squareDraw.drawing)
+      right: (squareDraw: SquareDraw) => { 
+        return new SquareDraw({
+          column: this.getNextColumn(squareDraw.column), 
+          row: squareDraw.row, 
+          name: squareDraw.drawing.name, 
+          type: squareDraw.drawing.type
+        })
+      },
+       left: (squareDraw: SquareDraw) => {
+        return new SquareDraw({
+          column: this.getPrevColumn(squareDraw.column), 
+          row: squareDraw.row, 
+          name: squareDraw.drawing.name, 
+          type: squareDraw.drawing.type
+        })
+      }
     }
 
     const columnCondition = (squareDraw: SquareDraw) => {
@@ -193,12 +214,22 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   ghostOfKievShooting() {
     const row = this.squareDrawShooter.row
-    const laser = new SquareDraw(this.squareDrawShooter.column, this.getPrevRow(row), 'ghost-of-kiev-laser', 'laser' )
+    const laser = new SquareDraw({
+      column: this.squareDrawShooter.column, 
+      row: this.getPrevRow(row), 
+      name: 'ghost-of-kiev-laser', 
+      type: 'laser' 
+    })
     return this.moveDrawing('up', 10, laser)
   }
 
   movingRussianTroop() {
-
+    const soldier1 = new SquareDraw({ column: 'B', row: 0, name: 'soldier-1', type: 'invader' })
+    const soldier3 = new SquareDraw({ column: 'C', row: 0, name: 'soldier-2', type: 'invader' })
+    const soldier4 = new SquareDraw({ column: 'D', row: 0, name: 'soldier-3', type: 'invader' })
+    return from([soldier1, soldier3, soldier4]).pipe(
+      mergeMap(s => this.moveDrawing('down', 700, s))
+    )
   }
 
   onShoot() {
@@ -227,13 +258,23 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
         if (k === 'ArrowLeft') {
           const col = this.getPrevColumn(this.squareDrawShooter.column)
           if (col) {
-            return new SquareDraw(col, this.squareDrawShooter.row, this.squareDrawShooter.drawing.name, this.squareDrawShooter.drawing.type)
+            return new SquareDraw({
+              column: col, 
+              row: this.squareDrawShooter.row, 
+              name: this.squareDrawShooter.drawing.name, 
+              type: this.squareDrawShooter.drawing.type
+            })
           }
         }
         if (k === 'ArrowRight') {
           const col = this.getNextColumn(this.squareDrawShooter.column)
           if (col) {
-            return new SquareDraw(col, this.squareDrawShooter.row, this.squareDrawShooter.drawing.name, this.squareDrawShooter.drawing.type)
+            return new SquareDraw({
+              column: col, 
+              row: this.squareDrawShooter.row, 
+              name: this.squareDrawShooter.drawing.name, 
+              type: this.squareDrawShooter.drawing.type
+            })
           }
         }
         return this.squareDrawShooter
