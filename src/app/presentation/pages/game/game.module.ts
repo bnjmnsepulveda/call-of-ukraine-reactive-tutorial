@@ -18,6 +18,7 @@ import { TargetResourcesComponent } from './component/target-resources/target-re
 import { WhacAMoleComponent } from './component/whac-a-mole/whac-a-mole.component';
 import { MedalSummaryComponent } from './component/medal-summary/medal-summary.component';
 import { GhostOfKievComponent } from './component/ghost-of-kiev/ghost-of-kiev.component';
+import { ReactiveGhostOfKievComponent } from './component/ghost-of-kiev/reactive-ghost-of-kiev.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { GhostOfKievComponent } from './component/ghost-of-kiev/ghost-of-kiev.co
     TargetResourcesComponent,
     WhacAMoleComponent,
     MedalSummaryComponent,
-    GhostOfKievComponent, 
+    GhostOfKievComponent,
+    ReactiveGhostOfKievComponent, 
   ],
   imports: [
     CommonModule,

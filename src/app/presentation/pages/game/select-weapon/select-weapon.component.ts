@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { WeaponSelectorService } from 'src/app/core/application/service/weapon-selector.service';
+import { WeaponSelectorService } from './../../../../../app/core/application/service/weapon-selector.service';
 import { Weapon } from 'src/app/core/domain/model/Weapon';
 
 @Component({

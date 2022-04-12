@@ -94,10 +94,7 @@ export class GhostOfKievComponent extends ReactiveComponent implements OnInit, O
 
   ngOnInit(): void {
     this.addSubscription(
-      interval(600).pipe(takeWhile(() => !this.isGameOver)).subscribe(x => this.moveInvaders(), err => {
-        console.log(err)
-        this.isGameOver = true
-      })
+     // interval(600).pipe(takeWhile(() => !this.isGameOver)).subscribe(x => this.moveInvaders())
     )
   }
 
@@ -206,7 +203,6 @@ export class GhostOfKievComponent extends ReactiveComponent implements OnInit, O
 
     this.draw()
 
-    console.log('currentshooterindex', this.currentShooterIndex)
     const classnames = this.squares[this.currentShooterIndex].classnames
     if (classnames.includes('invader') && classnames.includes('shooter')) {
       this.setGameOver('GAME OVER')

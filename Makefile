@@ -17,3 +17,6 @@ create-entity-state:
 	ng generate entity-store core/store/$(n)/$(n)
 	ng generate entity-query core/store/$(n)/$(n)
 	ng generate service --skip-tests=true core/store/service/$(n)-state
+
+test-screen:
+	node_modules/.bin/jest src/app/presentation/pages/game/component/ghost-of-kiev/model/Square.spec.ts

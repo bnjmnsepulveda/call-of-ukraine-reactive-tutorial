@@ -31,6 +31,7 @@ import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGame
             <app-target-ranking></app-target-ranking>
         </div>
         <div class="column is-7">
+            <app-reactive-ghost-of-kiev></app-reactive-ghost-of-kiev>
             <app-ghost-of-kiev></app-ghost-of-kiev>
             <app-whac-a-mole [seconds]="gameDuration" [delay]="1000" (onAttack)="onAttack($event)" (onGameOver)="onWhacaMoleGameOver($event)">
             </app-whac-a-mole>
@@ -71,7 +72,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),
-      realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
+     // realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
       notifyAttack$.subscribe(message => this.notificationMessage = message),
       ranking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
     )
