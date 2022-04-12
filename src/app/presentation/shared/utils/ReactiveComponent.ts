@@ -1,4 +1,5 @@
-import { Subscription } from "rxjs";
+import { ElementRef } from "@angular/core";
+import { concatMap, from, of, Subscription, delay, fromEvent } from "rxjs";
 
 export class ReactiveComponent {
     
@@ -10,6 +11,16 @@ export class ReactiveComponent {
 
     unsubscribeComponent() {
         this.subscriptions.forEach(sub => sub.unsubscribe())
+    }
+    
+    delayItems(items: any[], timeDelay: number) {
+        return from(items).pipe(
+            concatMap(item => of(item).pipe(delay(timeDelay))),
+        )
+    }
+
+    fromElementRefEvent(elementRef: ElementRef, event: string) {
+        return fromEvent(elementRef.nativeElement, event)
     }
     
 }
