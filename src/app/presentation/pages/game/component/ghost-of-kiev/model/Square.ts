@@ -1,6 +1,7 @@
 
 const ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'X', 'Y', 'Z']
 type DrawingType = '' | 'shooter' | 'laser' | 'invader' | 'boom'
+type SquareEventName = 'russian-target-destroyed' | 'shooter-damage' 
 
 class Square {
 
@@ -12,12 +13,15 @@ class Square {
 
     constructor(public readonly column: string, public readonly row: number) { }
 
-    addDrawing(d: Drawing) {
-        this.drawings.push(d)
+    addDrawing(drawing: Drawing) {
+        this.drawings = [
+            ...this.drawings,
+            drawing
+        ]
     }
 
-    removeDrawing(d: Drawing) {
-        this.drawings = this.drawings.filter(d => d.name !== d.name)
+    removeDrawing(drawing: Drawing) {
+        this.drawings = this.drawings.filter(d => d.name !== drawing.name)
     }
 
 }
@@ -26,6 +30,13 @@ interface Drawing {
     name: string;
     type: DrawingType;
 }
+
+export interface SquareEvent {
+    name: SquareEventName;
+    drawings: Drawing[];
+
+}
+
 interface SquareDrawProperties {
     column: string,
     row: number,
@@ -33,7 +44,7 @@ interface SquareDrawProperties {
     type: DrawingType
 }
 
-//rename to DrawPosition
+//rename to DrawingPosition
 export class SquareDraw {
 
     public readonly column: string
@@ -81,7 +92,7 @@ const createSquaresBySize = (columns: number, rows: number): Square[] => {
 }
 
 const draw = (squares: Square[], squareDraw: SquareDraw): Square[] => {
-    let newSquares = [...squares]
+    const newSquares = [...squares]
     for (let x = 0; x < newSquares.length; x++) {
         if (newSquares[x].key === squareDraw.key) {
             newSquares[x].addDrawing(squareDraw.drawing)
@@ -92,7 +103,7 @@ const draw = (squares: Square[], squareDraw: SquareDraw): Square[] => {
 }
 
 const erase = (squares: Square[], squareDraw: SquareDraw): Square[] => {
-    let newSquares = [...squares]
+    const newSquares = [...squares]
     for (let x = 0; x < newSquares.length; x++) {
         if (newSquares[x].drawings.map(x => x.name).includes(squareDraw.drawing.name)) {
             newSquares[x].removeDrawing(squareDraw.drawing)
