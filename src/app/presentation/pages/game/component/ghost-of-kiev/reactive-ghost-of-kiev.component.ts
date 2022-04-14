@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { concat, concatAll, concatMap, delay, filter, from, fromEvent, generate, interval, map, merge, mergeMap, Observable, of, startWith, switchMap, take, takeWhile, tap, timeInterval, zip } from 'rxjs';
+import { BehaviorSubject, concat, concatAll, concatMap, delay, empty, filter, from, fromEvent, generate, interval, map, merge, mergeMap, Observable, of, pipe, pluck, share, skipWhile, startWith, Subject, switchMap, take, takeUntil, takeWhile, tap, timeInterval, zip } from 'rxjs';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
-import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares } from './model/Square';
+import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares, SquareEvent } from './model/Square';
 
 @Component({
   selector: 'app-reactive-ghost-of-kiev',
@@ -65,26 +65,52 @@ import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquar
 })
 export class ReactiveGhostOfKievComponent extends ReactiveComponent implements OnInit, OnDestroy {
 
+  // screen
   title = 'REACTIVE Ghost of Kiev'
   squares: Square[] = []
   columns: string[] = []
   rows: number[] = []
-  squareDrawShooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter'})
+  // game
+  shooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter' })
+  shootDelay: number = 20;
+  // reactive properties
+  squareUpdated$ = new Subject<Square>();
+  invaderShooted$: Observable<Square> = null;
+
 
   @ViewChild('screen', { static: true }) screen: ElementRef;
 
   constructor() { super() }
 
   ngOnInit(): void {
-    this.squares = this.createSquares(15, 15)
 
+    let squares = this.createSquares(15, 15)
+
+    this.invaderShooted$ = this.squareUpdated$.pipe(
+      filter(square => {
+        const types = square.drawings.map(d => d.type)
+        return types.includes('laser') && types.includes('invader')
+      }),
+    )
+
+    const squares$ = merge(
+      this.onMoveShooter(),
+      this.onShoot(),
+      this.movingRussianTroop()
+    ).pipe(
+      map(squareDraw => draw(erase(squares, squareDraw), squareDraw)),
+      share()
+    )
+
+    const squareUpdated$ = squares$.pipe(
+      switchMap(squares => from(squares))
+    )
 
     this.addSubscription(
-      this.onMoveShooter().subscribe(sd => this.subscribeToDrawingSquare(sd)),
-      this.onShoot().subscribe(sd => this.subscribeToDrawingSquare(sd)),
-      this.movingRussianTroop().subscribe(sd => this.subscribeToDrawingSquare(sd))
-      //this.ghostOfKievShooting().subscribe(x => this.drawingSquare(this.squares, x))
+      squares$.subscribe(squares => this.squares = squares),
+      squareUpdated$.subscribe(square => this.squareUpdated$.next(square)),
     )
+
   }
 
   ngOnDestroy(): void {
@@ -102,16 +128,12 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
     return square.drawings.map(d => d.type).join(' ')
   }
 
-  drawingSquare(squares: Square[], drawing: SquareDraw) {
-    return draw(erase(squares, drawing), drawing)
-  }
-
-  subscribeToDrawingSquare(drawing: SquareDraw) {
-    this.drawingSquare(this.squares, drawing)
-  }
-
-  getIndexColumn(column: string) {
-    return this.columns.indexOf(column)
+  updateSquare(drawing: SquareDraw): Square[] {
+    // console.log('draw-square', drawing)
+    const erased = erase([...this.squares], drawing)
+    const drawed = draw(erased, drawing)
+    // console.log(drawed)
+    return drawed
   }
 
   getNextColumn(column: string) {
@@ -150,38 +172,38 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   //#region Game observables
 
-  moveDrawing(direction: 'up' | 'down' | 'right' | 'left', intervaltime: number, initialDrawing: SquareDraw) {
+  moveDrawing(direction: 'up' | 'down' | 'right' | 'left', intervaltime: number, initialDrawing: SquareDraw): Observable<SquareDraw> {
 
     const iterators = {
       up: (squareDraw: SquareDraw) => {
-        return new SquareDraw({ 
-          column: squareDraw.column, 
-          row: this.getPrevRow(squareDraw.row), 
+        return new SquareDraw({
+          column: squareDraw.column,
+          row: this.getPrevRow(squareDraw.row),
           name: squareDraw.drawing.name,
           type: squareDraw.drawing.type
         })
       },
       down: (squareDraw: SquareDraw) => {
         return new SquareDraw({
-          column: squareDraw.column, 
-          row: this.getNextRow(squareDraw.row), 
-          name: squareDraw.drawing.name, 
+          column: squareDraw.column,
+          row: this.getNextRow(squareDraw.row),
+          name: squareDraw.drawing.name,
           type: squareDraw.drawing.type
         })
       },
-      right: (squareDraw: SquareDraw) => { 
+      right: (squareDraw: SquareDraw) => {
         return new SquareDraw({
-          column: this.getNextColumn(squareDraw.column), 
-          row: squareDraw.row, 
-          name: squareDraw.drawing.name, 
+          column: this.getNextColumn(squareDraw.column),
+          row: squareDraw.row,
+          name: squareDraw.drawing.name,
           type: squareDraw.drawing.type
         })
       },
-       left: (squareDraw: SquareDraw) => {
+      left: (squareDraw: SquareDraw) => {
         return new SquareDraw({
-          column: this.getPrevColumn(squareDraw.column), 
-          row: squareDraw.row, 
-          name: squareDraw.drawing.name, 
+          column: this.getPrevColumn(squareDraw.column),
+          row: squareDraw.row,
+          name: squareDraw.drawing.name,
           type: squareDraw.drawing.type
         })
       }
@@ -212,82 +234,83 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
     )
   }
 
-  ghostOfKievShooting() {
-    const row = this.squareDrawShooter.row
+  ghostOfKievShooting(): Observable<SquareDraw> {
     const laser = new SquareDraw({
-      column: this.squareDrawShooter.column, 
-      row: this.getPrevRow(row), 
-      name: 'ghost-of-kiev-laser', 
-      type: 'laser' 
+      column: this.shooter.column,
+      row: this.getPrevRow(this.shooter.row),
+      name: 'ghost-of-kiev-laser',
+      type: 'laser'
     })
-    return this.moveDrawing('up', 10, laser)
+    return this.moveDrawing('up', this.shootDelay, laser)
   }
 
-  movingRussianTroop() {
-    const soldier1 = new SquareDraw({ column: 'B', row: 0, name: 'soldier-1', type: 'invader' })
-    const soldier3 = new SquareDraw({ column: 'C', row: 0, name: 'soldier-2', type: 'invader' })
-    const soldier4 = new SquareDraw({ column: 'D', row: 0, name: 'soldier-3', type: 'invader' })
-    return from([soldier1, soldier3, soldier4]).pipe(
-      mergeMap(s => this.moveDrawing('down', 700, s))
+  movingRussianInvader(squareDraw: SquareDraw) {
+    
+    const invaderShooted$ = this.invaderShooted$.pipe(
+      switchMap(s => from(s.drawings)),
+      filter(d => d.name === squareDraw.drawing.name),
+      tap(x => console.log('soldier-shooted', x))
     )
+
+    return of(squareDraw).pipe(
+      mergeMap(s => this.moveDrawing('down', 1000, s)),
+      takeUntil(invaderShooted$)
+    )
+
+  }
+
+  movingRussianTroop(): Observable<SquareDraw> {
+
+    const soldier1$ = this.movingRussianInvader(new SquareDraw({ column: 'A', row: 0, name: 'soldier-1', type: 'invader' }))
+    const soldier2$ = this.movingRussianInvader(new SquareDraw({ column: 'B', row: 0, name: 'soldier-2', type: 'invader' }))
+    const soldier3$ = this.movingRussianInvader(new SquareDraw({ column: 'C', row: 0, name: 'soldier-3', type: 'invader' }))
+    return merge(soldier1$, soldier2$, soldier3$)
+
   }
 
   onShoot() {
 
-    const keysAllowed = ['ArrowUp']
-
     return this.fromElementRefEvent(this.screen, 'keydown').pipe(
-      filter((event: any) => keysAllowed.includes(event.key)),
-      concatMap(() => this.ghostOfKievShooting()),
+      pluck('key'),
+      filter((key: any) => key === 'ArrowUp'),
+      concatMap(() => this.ghostOfKievShooting().pipe(
+        takeUntil(this.invaderShooted$)
+      )),
     )
-
   }
 
-  onMoveShooter() {
+  onMoveShooter(): Observable<SquareDraw> {
 
-    const keysAllowed = ['ArrowLeft', 'ArrowRight']
+    const moving$ = this.fromElementRefEvent(this.screen, 'keydown').pipe(pluck('key'))
 
-    const initShooter$ = of(this.squareDrawShooter).pipe(
-      tap(x => this.subscribeToDrawingSquare(x))
+    const moveSquareDraw = () => (source: Observable<string>) => source.pipe(
+      skipWhile(column => column === null),
+      map(column => {
+        return new SquareDraw({
+          column: column,
+          row: this.shooter.row,
+          name: this.shooter.drawing.name,
+          type: this.shooter.drawing.type
+        })
+      })
     )
 
-    const eventMoving$ = this.fromElementRefEvent(this.screen, 'keydown').pipe(
-      filter((event: any) => keysAllowed.includes(event.key)),
-      map(e => e.key),
-      map(k => {
-        if (k === 'ArrowLeft') {
-          const col = this.getPrevColumn(this.squareDrawShooter.column)
-          if (col) {
-            return new SquareDraw({
-              column: col, 
-              row: this.squareDrawShooter.row, 
-              name: this.squareDrawShooter.drawing.name, 
-              type: this.squareDrawShooter.drawing.type
-            })
-          }
-        }
-        if (k === 'ArrowRight') {
-          const col = this.getNextColumn(this.squareDrawShooter.column)
-          if (col) {
-            return new SquareDraw({
-              column: col, 
-              row: this.squareDrawShooter.row, 
-              name: this.squareDrawShooter.drawing.name, 
-              type: this.squareDrawShooter.drawing.type
-            })
-          }
-        }
-        return this.squareDrawShooter
-      }),
-      tap(x => this.squareDrawShooter = x),
-      //tap(x => console.log('click-screen', x)),
-      //  map(x => this.drawingSquare(this.squares, x)),
+    const right$ = moving$.pipe(
+      filter((key: any) => key === 'ArrowRight'),
+      map(() => this.getNextColumn(this.shooter.column)),
+      moveSquareDraw()
     )
 
-    return initShooter$.pipe(
-      mergeMap(x => eventMoving$)
+    const left$ = moving$.pipe(
+      filter((key: any) => key === 'ArrowLeft'),
+      map(() => this.getPrevColumn(this.shooter.column)),
+      moveSquareDraw()
     )
 
+    return merge(right$, left$).pipe(
+      startWith(this.shooter),
+      tap(shooter => this.shooter = shooter)
+    )
   }
 
   //#endregion
