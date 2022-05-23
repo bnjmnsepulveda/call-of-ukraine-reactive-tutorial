@@ -26,10 +26,10 @@ import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGame
     <app-notify class="m-3" [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
     
     <div class="columns">
-        <div class="column is-5">
+        <!-- <div class="column is-5">
             <app-soldier-ranking></app-soldier-ranking>
             <app-target-ranking></app-target-ranking>
-        </div>
+        </div> -->
         <div class="column is-7">
             <app-reactive-ghost-of-kiev></app-reactive-ghost-of-kiev>
             <app-ghost-of-kiev></app-ghost-of-kiev>

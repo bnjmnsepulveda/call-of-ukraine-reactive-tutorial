@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app"
-import { DocumentData, Firestore, FirestoreError, getDoc, getFirestore, QuerySnapshot } from "firebase/firestore"
+import { doc, setDoc, DocumentData, Firestore, FirestoreError, getDoc, getFirestore, QuerySnapshot, collection, query, onSnapshot } from "firebase/firestore"
+import { from, map, Observable, Observer, share } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
-import { collection, query, onSnapshot } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
-import { from, map, Observable, Observer } from 'rxjs';
 
 initializeApp({
-  apiKey: 'AIzaSyC8dKarz-c8JrXWirpoL8yFWoPZ4Ami_Qg',
-  authDomain: 'call-of-ukraine-app.firebaseapp.com',
-  projectId: 'call-of-ukraine-app'
+  apiKey: environment.firebase.apiKey,
+  authDomain: environment.firebase.authDomain,
+  projectId: environment.firebase.projectId
 });
 
 @Injectable({
@@ -56,11 +55,14 @@ export class FirebaseClientService {
       observer.complete()
     }
 
-    const observable = new Observable((observer: Observer<any>) => {
+    const documentAdded$ = new Observable((observer: Observer<any>) => {
       onSnapshot(queryDocument, (snapshot) => onSnapshotNext(snapshot, observer), err => onSnapshotError(err, observer), () => onSnapshotComplete(observer));
     })
 
-    return observable
+    return documentAdded$.pipe(
+      share()
+    )
+    
   }
 
 

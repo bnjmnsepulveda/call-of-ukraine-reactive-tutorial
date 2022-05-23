@@ -1,7 +1,7 @@
 
 const ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'X', 'Y', 'Z']
-type DrawingType = '' | 'shooter' | 'laser' | 'invader' | 'boom'
-type SquareEventName = 'russian-target-destroyed' | 'shooter-damage' 
+export type DrawingType = '' | 'shooter' | 'laser' | 'invader' | 'boom'
+type SquareEventName = 'russian-target-destroyed' | 'shooter-damage' | 'invader-destroyed'
 
 class Square {
 
@@ -24,6 +24,14 @@ class Square {
         this.drawings = this.drawings.filter(d => d.name !== drawing.name)
     }
 
+    removeDrawingByName(name: string) {
+        this.drawings = this.drawings.filter(d => d.name !== name)
+    }
+
+    removeDrawingStaringBy(name: string) {
+        this.drawings = this.drawings.filter(d => !d.name.startsWith(name))
+    }
+    
 }
 
 interface Drawing {
@@ -32,9 +40,10 @@ interface Drawing {
 }
 
 export interface SquareEvent {
+    row: number;
+    column: string;
     name: SquareEventName;
     drawings: Drawing[];
-
 }
 
 interface SquareDrawProperties {
@@ -112,6 +121,50 @@ const erase = (squares: Square[], squareDraw: SquareDraw): Square[] => {
     return newSquares
 }
 
+const eraseByName = (squares: Square[], name: string): Square[] => {
+    const newSquares = [...squares]
+    for (let x = 0; x < newSquares.length; x++) {
+        if (newSquares[x].drawings.map(x => x.name).includes(name)) {
+            newSquares[x].removeDrawingByName(name)
+            console.log('deleting', name)
+        }
+    }
+    return newSquares
+}
+
+const eraseByStartWith = (squares: Square[], name: string): Square[] => {
+    const newSquares = [...squares]
+    for (let x = 0; x < newSquares.length; x++) {
+        if (newSquares[x].drawings.map(x => x.name).some(x => x.startsWith(name))) {
+            newSquares[x].removeDrawingStaringBy(name)
+            console.log('deleting', name)
+        }
+    }
+    return newSquares
+}
+
+const eraseDrawings = (squares: Square[], col: string, row: number): Square[] => {
+    const newSquares = [...squares]
+    for (let x = 0; x < newSquares.length; x++) {
+        if (newSquares[x].column === col && newSquares[x].row === row) {
+            newSquares[x].drawings = []
+            console.log('deleting', name)
+        }
+    }
+    return newSquares
+}
+
+const createEvent = (square: Square): SquareEvent => {
+    const types = square.drawings.map(d => d.type)
+    if (types.includes('invader') && types.includes('laser')) {
+        return {
+            ...square,
+            name: 'invader-destroyed'
+        }
+    }
+    return null
+}
+
 export {
     Square,
     createSquares,
@@ -119,5 +172,9 @@ export {
     createRows,
     createSquaresBySize,
     draw,
-    erase
+    erase,
+    createEvent,
+    eraseByName,
+    eraseDrawings,
+    eraseByStartWith
 }

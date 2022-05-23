@@ -57,8 +57,8 @@ describe('Screen', () => {
         let result = draw(squares, new SquareDraw({column: 'A', row: 2, name: 'jet', type: 'shooter' }))
         result = draw(result, new SquareDraw({ column: 'B', row: 3, name: 'warplane', type: 'shooter' }))
 
-         result.map(x => x.drawings).forEach(x => console.log(x))
+        //  result.map(x => x.drawings).forEach(x => console.log(x))
         result = erase(squares, new SquareDraw({column: 'A', row: 2, name:'jet', type: 'boom' }))
-        result.map(x => x.drawings).forEach(x => console.log(x))
+      //  result.map(x => x.drawings).forEach(x => console.log(x))
     })
 })
