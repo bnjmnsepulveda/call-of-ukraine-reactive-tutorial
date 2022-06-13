@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DocumentData } from 'firebase/firestore';
-import { filter,  Observable,  } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 import { Attack } from '../../domain/model/Attack';
 import { FirebaseClientService } from './firebase-client.service';
 

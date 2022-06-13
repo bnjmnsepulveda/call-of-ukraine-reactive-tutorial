@@ -9,7 +9,7 @@ export function calculateTargetRanking(attacks: Attack[]): TargetRanking {
     const cityRanking = calculateRemainigResources(attacks)
 
     return {
-        id: russiantarget.id,
+        id: russiantarget.name,
         name: russiantarget.name,
         ...cityRanking
     }
