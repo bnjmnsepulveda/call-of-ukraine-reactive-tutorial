@@ -31,20 +31,15 @@ import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGame
             <app-target-ranking></app-target-ranking>
         </div> -->
         <div class="column is-7">
-            <app-reactive-ghost-of-kiev></app-reactive-ghost-of-kiev>
-            <app-ghost-of-kiev></app-ghost-of-kiev>
+            <app-reactive-ghost-of-kiev (onAttack)="onGhostOfKievAttack($event)"></app-reactive-ghost-of-kiev>
+            <!-- <app-ghost-of-kiev ></app-ghost-of-kiev> -->
             <app-whac-a-mole [seconds]="gameDuration" [delay]="1000" (onAttack)="onAttack($event)" (onGameOver)="onWhacaMoleGameOver($event)">
             </app-whac-a-mole>
-            <!-- <app-select-weapon (weaponChange)="takeRandomWeapon($event)" ></app-select-weapon>
-            <div>
-                <app-weapon-detail [weapon]="select?.weapon"></app-weapon-detail>
-                <app-select-target *ngIf="select?.weapon" (russianTargetChange)="destroyRussianTarget($event)"></app-select-target>
-            </div> -->
         </div>
-        <!-- <div class="column">
+        <div class="column">
             <app-target-ranking></app-target-ranking>
             <app-city-ranking></app-city-ranking>
-        </div> -->
+        </div>
     </div>
   </div>
   `
@@ -82,6 +77,11 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     this.unsubscribeComponent()
   }
  
+  onGhostOfKievAttack(attack: AttackRequestDTO) {
+    console.log('Ghost-of-kiev-attack', attack)
+    this.ukraineArmyService.attackRussianTarget(attack)
+  }
+
   notifyAttack(attack$: Observable<Attack>) {
     return attack$.pipe(
       map(attack => createNotificationFromAttack(attack)),

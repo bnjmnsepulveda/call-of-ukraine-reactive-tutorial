@@ -1,5 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { concatMap, delay, endWith, filter, from, generate, map, merge, Observable, of, pluck, share, skipWhile, startWith, Subject, switchMap, take, takeUntil, takeWhile, tap, timeInterval, toArray, zip } from 'rxjs';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { concatMap, delay, filter, from, generate, map, merge, Observable, of, pluck, share, skipWhile, startWith, Subject, switchMap, take, takeUntil, takeWhile, tap, timeInterval, toArray, zip } from 'rxjs';
+import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO';
+import { GhostOfKievGameOverDTO } from 'src/app/core/application/dto/GhostOfKievGameOverDTO';
+import { createRussianTarget } from 'src/app/core/domain/service/createRussianTarget';
+import { createWeapon } from 'src/app/core/domain/service/createWeapon';
+import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
 import { MovingRussianInvaderDTO } from './dto/MovingRussianInvaderDTO';
 import { drawInvaderBase } from './model/RussianEnemy';
@@ -83,7 +88,11 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   @ViewChild('screen', { static: true }) screen: ElementRef;
 
-  constructor() { super() }
+  @Output() onAttack: EventEmitter<AttackRequestDTO> = new EventEmitter<AttackRequestDTO>();
+  @Output() onGameOver: EventEmitter<GhostOfKievGameOverDTO> = new EventEmitter<GhostOfKievGameOverDTO>();
+  @Output() onDestroyAllTroop: EventEmitter<string> = new EventEmitter();
+
+  constructor(private sessionState: SessionStateService) { super() }
 
   ngOnInit(): void {
 
@@ -96,11 +105,6 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       }),
       share()
     )
-
-    // this.troopCapturePlayer$ = this.squareUpdated$.pipe(
-    //   filter(square => )
-    // )
-
 
     const squares$ = merge(
       this.onMoveShooter(),
@@ -261,7 +265,20 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
     const invaderShooted$ = this.invaderShooted$.pipe(
       switchMap(s => from(s.drawings)),
       filter(d => d.name === invader.name),
-      tap(x => console.log('soldier-shooted', x))
+      tap(() => this.onAttack.emit({
+        russianTarget: createRussianTarget('Russian troop', 'moscu', {
+          soldiers: 10000
+        }),
+        soldier: this.sessionState.getSoldier(),
+        weapon: createWeapon({
+          damage: {
+            soldiers: 150
+          },
+          category: 'misil',
+          description: 'Ghost of kiev misil',
+          name: 'Ghost of kiev fucking misil'
+        })
+      }))
     )
 
     return drawInvaderBase({
