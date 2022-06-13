@@ -4,9 +4,6 @@ import { createWeapon } from '../../domain/service/createWeapon';
 import { getRandomItem } from '../../lib/RandomHelper';
 import { GhostOfKievTargetDTO } from '../dto/GhostOfKievTargetDTO';
 
-
-type TargetName = 'bunker putin' | 'Batallon Ruso' | 'ejercity rojo' | 'kremlin'
-
 @Injectable({
   providedIn: 'root'
 })

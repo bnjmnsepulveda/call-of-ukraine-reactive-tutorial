@@ -3,7 +3,6 @@ import { Target } from 'src/app/presentation/pages/game/dto/whac-target.dto';
 import { RussianTarget } from '../../domain/model/RussianTarget';
 import { createRussianTarget } from '../../domain/service/createRussianTarget';
 import { createWeapon } from '../../domain/service/createWeapon';
-import { GhostOfKievService } from './ghost-of-kiev.service';
 
 type TargetName = 'bunker putin' | 'Batallon Ruso' | 'ejercity rojo' | 'kremlin'
 
