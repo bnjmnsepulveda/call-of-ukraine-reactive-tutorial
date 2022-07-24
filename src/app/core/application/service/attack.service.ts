@@ -4,8 +4,6 @@ import { filter, Observable } from 'rxjs';
 import { DOCUMENT_SERVICE } from '../../../app.module';
 import { Attack } from '../../domain/model/Attack';
 import { DocumentProvider } from '../providers/document.provider';
-import { FirebaseClientService } from './firebase-client.service';
-// import { FirebaseClientService } from './firebase-client.service';
 
 @Injectable({
   providedIn: 'root'

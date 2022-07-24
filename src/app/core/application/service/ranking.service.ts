@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SoldierRanking } from '../../domain/model/SoldierRanking';
 import { TargetRanking } from '../../domain/model/TargetRanking';
-import { CityRankingStateService } from '../../store/service/city-ranking-state.service';
 import { SoldierRankingStateService } from '../../store/service/soldier-ranking-state.service';
 import { TargetRankingStateService } from '../../store/service/target-ranking-state.service';
 
@@ -12,7 +11,6 @@ export class RankingService {
 
   constructor(
     private soldierRankingState: SoldierRankingStateService, 
-    private cityRankingState: CityRankingStateService,
     private targetRankingState: TargetRankingStateService
   ) { }
 

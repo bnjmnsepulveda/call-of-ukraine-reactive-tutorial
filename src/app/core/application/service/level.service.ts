@@ -8,7 +8,7 @@ export class LevelService {
   levelIndex = 0
   levels: LevelGame[] = [
     {
-      index: 0,
+      name: 'Infanteria rusa',
       invaderDelay: 500,
       movingToRight: 5,
       shootDelay: 20,
@@ -16,7 +16,7 @@ export class LevelService {
       troopRows: 2,
     },
     {
-      index: 1,
+      name: 'Moscu',
       invaderDelay: 500,
       movingToRight: 5,
       shootDelay: 20,
@@ -24,7 +24,7 @@ export class LevelService {
       troopRows: 3,
     },
     {
-      index: 1,
+      name: 'Marina rusa',
       invaderDelay: 500,
       movingToRight: 3,
       shootDelay: 20,
@@ -32,7 +32,7 @@ export class LevelService {
       troopRows: 2,
     },
     {
-      index: 1,
+      name: 'Stalingado',
       invaderDelay: 100,
       movingToRight: 3,
       shootDelay: 20,

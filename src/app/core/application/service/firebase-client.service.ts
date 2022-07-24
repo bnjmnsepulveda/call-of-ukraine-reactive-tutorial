@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { initializeApp } from "firebase/app"
 import { doc, setDoc, DocumentData, Firestore, FirestoreError, getDoc, getFirestore, QuerySnapshot, collection, query, onSnapshot } from "firebase/firestore"
 import { from, map, Observable, Observer, share } from 'rxjs';
@@ -12,9 +11,6 @@ initializeApp({
   projectId: environment.firebase.projectId
 });
 
-// @Injectable({
-//   providedIn: 'root'
-// })
 export class FirebaseClientService implements DocumentProvider {
 
   private db: Firestore = null;

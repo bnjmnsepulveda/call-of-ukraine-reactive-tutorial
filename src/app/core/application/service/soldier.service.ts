@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT_SERVICE } from '../../../app.module';
 import { Soldier } from '../../domain/model/Soldier';
 import { DocumentProvider } from '../providers/document.provider';
-import { FirebaseClientService } from './firebase-client.service';
 
 @Injectable({
   providedIn: 'root'
