@@ -1,7 +1,6 @@
-import { EntityBase } from "../../lib/EntityBase";
 import { Resource } from "./Resource";
 
-export interface RussianTarget extends EntityBase {
-    city: string;
+export interface RussianTarget {
+    name: string;
     resources: Resource
 }

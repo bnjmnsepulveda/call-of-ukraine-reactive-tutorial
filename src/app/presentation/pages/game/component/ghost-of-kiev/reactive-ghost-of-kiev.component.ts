@@ -4,8 +4,10 @@ import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO'
 import { GhostOfKievGameOverDTO } from 'src/app/core/application/dto/GhostOfKievGameOverDTO';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
-import { GhostOfKievService } from '../../../../../core/application/service/ghost-of-kiev.service';
+import { RussianTarget } from '../../../../../core/domain/model/RussianTarget';
+import { Weapon } from '../../../../../core/domain/model/Weapon';
 import { MovingRussianInvaderDTO } from './dto/MovingRussianInvaderDTO';
+import { LevelGame } from './model/LevelGame';
 import { drawInvaderBase } from './model/RussianEnemy';
 import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares, eraseDrawings, eraseByStartWith } from './model/Square';
 
@@ -77,30 +79,38 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   columns: string[] = []
   rows: number[] = []
   // game
-  @Input()
   invaderDelay = 300;
-  @Input()
   shootDelay: number = 10;
-  @Input()
   troopRows = 2// 3
-  @Input()
   troopColumns = 2 //10
-  @Input()
   movingToRight = 5 //6
+  target: RussianTarget;
+  weapon: Weapon;
   shooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter' })
-  // reactive properties
-  squareUpdated$ = new Subject<Square>();
-  invaderShooted$: Observable<Square> = null;
-  troopCapturePlayer$: Observable<Square> = null;
-  // squareEvent$: Observable<SquareEvent>
+  // component properties
+  @Input()
+  set level(level: LevelGame) {
+    this.invaderDelay = level.invaderDelay
+    this.target = level.target
+    this.weapon = level.weapon
+    this.shootDelay = level.shootDelay
+    this.troopRows = level.troopRows
+    this.troopColumns = level.troopColumns
+    this.movingToRight = level.movingToRight
+  }
 
   @ViewChild('screen', { static: true }) screen: ElementRef;
 
   @Output() onAttack: EventEmitter<AttackRequestDTO> = new EventEmitter<AttackRequestDTO>();
   @Output() onGameOver: EventEmitter<GhostOfKievGameOverDTO> = new EventEmitter<GhostOfKievGameOverDTO>();
   @Output() onDestroyAllTroop: EventEmitter<string> = new EventEmitter();
+  
+  // reactive properties
+  squareUpdated$ = new Subject<Square>();
+  invaderShooted$: Observable<Square> = null;
+  troopCapturePlayer$: Observable<Square> = null;
 
-  constructor(private sessionState: SessionStateService, private ghostOfKievService: GhostOfKievService) { super() }
+  constructor(private sessionState: SessionStateService) { super() }
 
   ngOnInit(): void {
 
@@ -270,15 +280,13 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   movingRussianInvader(invader: MovingRussianInvaderDTO) {
 
-    const target = this.ghostOfKievService.getRussianArmies()[0];
-
     const invaderShooted$ = this.invaderShooted$.pipe(
       switchMap(s => from(s.drawings)),
       filter(d => d.name === invader.name),
       tap(() => this.onAttack.emit({
-        russianTarget: target.target,
+        russianTarget: this.target,
+        weapon: this.weapon,
         soldier: this.sessionState.getSoldier(),
-        weapon: target.weapon
       })),
     )
 
@@ -300,9 +308,6 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   movingRussianTroop(troopPrefix: string = ''): Observable<SquareDraw> {
 
     const idPrefix = `${troopPrefix}-soldier-`
-    // const troopRows = 2// 3
-    // const troopColumns = 2 //10
-    // const movingToRight = 5 //6
     const soldierTroops: MovingRussianInvaderDTO[] = []
     let soldierSuffix = 0;
 

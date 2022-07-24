@@ -35,14 +35,7 @@ enum GameState {
         <div [ngSwitch]="gameState">
           <!-- GHOST OF KIEV GAME -->
           <div *ngSwitchCase="gameStateOptions.PLAYING">
-            <app-reactive-ghost-of-kiev 
-              [invaderDelay]="level.invaderDelay"
-              [shootDelay]="level.shootDelay"
-              [troopRows]="level.troopRows"
-              [troopColumns]="level.troopColumns"
-              [movingToRight]="level.movingToRight"
-              (onGameOver)="onGameOver($event)" 
-              (onAttack)="onGhostOfKievAttack($event)"></app-reactive-ghost-of-kiev>
+            <app-reactive-ghost-of-kiev [level]="level" (onGameOver)="onGameOver($event)" (onAttack)="onGhostOfKievAttack($event)"></app-reactive-ghost-of-kiev>
           </div>
           <!-- WINNER MESSAGE -->
           <div *ngSwitchCase="gameStateOptions.WON">
@@ -104,7 +97,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   notifyAttack(attack$: Observable<Attack>) {
     return attack$.pipe(
       map(attack => createNotificationFromAttack(attack)),
-      map(attack => `${attack.soldiername} ha atacado sin misericordia a ${attack.target} en la ciudad de ${attack.city} Putin se esta inquietando`),
+      map(attack => `${attack.soldiername} ha atacado sin misericordia a ${attack.target} Putin se esta inquietando`),
     )
   }
 

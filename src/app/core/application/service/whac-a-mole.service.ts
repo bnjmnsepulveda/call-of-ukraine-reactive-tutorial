@@ -12,23 +12,23 @@ type TargetName = 'bunker putin' | 'Batallon Ruso' | 'ejercity rojo' | 'kremlin'
 export class WhacAMoleService {
 
   private russianTargets: RussianTarget[] = [
-    createRussianTarget('bunker putin' , 'moscu', { 
+    createRussianTarget('bunker putin' , { 
       civilians: 0,
       soldiers: 20000,
       trucks: 100
     }),
-    createRussianTarget('Batallon Ruso' , 'moscu', { 
+    createRussianTarget('Batallon Ruso' , { 
       civilians: 0,
       soldiers: 20000,
       trucks: 100
     }),
-    createRussianTarget('ejercity rojo', 'stalingrado', {
+    createRussianTarget('ejercity rojo', {
       soldiers: 100,
       trucks: 100,
       tanks: 100,
       warplanes: 100,
     }),
-    createRussianTarget('kremlin', 'moscu', {
+    createRussianTarget('kremlin', {
       soldiers: 100,
       trucks: 100,
       tanks: 100,
