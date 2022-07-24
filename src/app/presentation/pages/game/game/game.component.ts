@@ -1,21 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, of, pluck, tap, zip } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { AttackService } from 'src/app/core/application/service/attack.service';
 import { RankingService } from 'src/app/core/application/service/ranking.service';
 import { UkraineArmyService } from 'src/app/core/application/service/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
-import { calculateTargetRanking } from 'src/app/core/domain/service/calculateTargetRanking';
-import { calculateSoldierRanking } from 'src/app/core/domain/service/calculateSoldierRanking';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
 import { SoldierAttackDTO } from 'src/app/core/application/dto/SoldierAttackDTO';
 import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO';
-import { WhacaMoleGameOverDTO } from 'src/app/core/application/dto/WhacaMoleGameOverDTO';
-import Swal from 'sweetalert2';
 import { GhostOfKievGameOverDTO } from '../../../../core/application/dto/GhostOfKievGameOverDTO';
 import { LevelGame } from '../component/ghost-of-kiev/model/LevelGame';
 import { LevelService } from '../../../../core/application/service/level.service';
+import { TargetRankingStateService } from '../../../../core/store/service/target-ranking-state.service';
+import { TargetRanking } from '../../../../core/domain/model/TargetRanking';
 
 enum GameState {
   PLAYING,
@@ -77,7 +75,8 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     private attackService: AttackService,
     private attackState: AttackStateService,
     private rankingService: RankingService,
-    private levelService: LevelService
+    private levelService: LevelService,
+    private targetRankingState: TargetRankingStateService,
   ) { super() }
 
   ngOnInit(): void {
@@ -86,14 +85,16 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create observables
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
-    const ranking$ = this.calculateRanking(realtimeAttacks$)
+    const targetRanking$ = this.calculateTargetRanking(realtimeAttacks$)
+    const soldierRanking$ = this.calculateSoldierRanking(realtimeAttacks$)
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),
       realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
       notifyAttack$.subscribe(message => this.notificationMessage = message),
-      ranking$.subscribe(ranking => this.rankingService.saveSoldierRanking(ranking))
+      targetRanking$.subscribe(tr => this.targetRankingState.upsert(tr)),
+      soldierRanking$.subscribe(sr => this.rankingService.saveSoldierRanking(sr))
     )
   }
 
@@ -119,34 +120,61 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     )
   }
 
-  calculateRanking(attack$: Observable<Attack>) {
-    // const cities$ = this.calculateCityRanking(attack$)
-    const targets$ = this.calculateTargetRanking(attack$)
-    const soldierAttack$ = attack$.pipe(map(attack => ({ soldier: attack.soldier, weapon: attack.weapon } as SoldierAttackDTO)))
-    return zip(
-      targets$,
-      soldierAttack$
-    ).pipe(
-      map(([target, soldierAttack]) => ({ target, soldierAttack })),
-      tap(ranking => this.rankingService.saveTargetRanking(ranking.target)),
-      map(ranking => calculateSoldierRanking(ranking.soldierAttack.soldier, ranking.soldierAttack.weapon)),
+  calculateSoldierRanking(attack$: Observable<Attack>) {
 
+    const soldierAttack$ = attack$.pipe(map(attack => ({ soldier: attack.soldier, weapon: attack.weapon } as SoldierAttackDTO)))
+    
+    return soldierAttack$.pipe(
+      map(({ soldier, weapon}) => {
+        let points = 0
+        const civilians = weapon.damage.civilians
+        const soldiers = weapon.damage.soldiers
+        const buildings = weapon.damage.buildings
+        const tanks = weapon.damage.tanks
+        const trucks = weapon.damage.trucks
+        const warplanes = weapon.damage.warplanes
+        const warships = weapon.damage.warships
+        points = civilians + soldiers + buildings + tanks + trucks + warplanes + warships
+        return {
+            soldiername: soldier.name,
+            points,
+            statistics: {
+                civilians,
+                soldiers,
+                buildings,
+                tanks,
+                trucks,
+                warplanes,
+                warships
+            }
+        }
+    })
     )
   }
 
-  // calculateCityRanking(attack$: Observable<Attack>) {
-  //   return attack$.pipe(
-  //     pluck('russianTarget', 'city'),
-  //     map(cityname => this.attackState.getByCity(cityname)),
-  //     map(attacks => calculateCityRanking(attacks))
-  //   )
-  // }
-
   calculateTargetRanking(attack$: Observable<Attack>) {
-    return attack$.pipe(
-      pluck('russianTarget', 'name'),
-      map(targetname => this.attackState.getByRussianTarget(targetname)),
-      map(attacks => calculateTargetRanking(attacks))
+     return attack$.pipe(
+      map(a => {
+        const damage = a.weapon.damage
+        const ranking = this.targetRankingState.getByName(a.russianTarget.name)
+        if (!ranking) {
+          return {
+            id: a.russianTarget.name,
+            name: a.russianTarget.name,
+            ...damage
+          } as TargetRanking
+        }
+        return {
+          ...ranking,
+          civilians: ranking.civilians + damage.civilians,
+          soldiers: ranking.soldiers + damage.soldiers,
+          buildings: ranking.buildings + damage.buildings,
+          tanks: ranking.tanks + damage.tanks,
+          trucks: ranking.trucks + damage.trucks,
+          warplanes: ranking.warplanes + damage.warplanes,
+          warships: ranking.warships + damage.warships
+        }
+      })
     )
   }
 

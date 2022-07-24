@@ -1,5 +1,5 @@
 export interface LevelGame {
-  index: number;
+  name: string;
   invaderDelay: number;
   shootDelay: number;
   troopRows: number;

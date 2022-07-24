@@ -6,8 +6,17 @@ import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveCom
 
 @Component({
   selector: 'app-target-ranking',
-  templateUrl: './target-ranking.component.html',
-  styleUrls: ['./target-ranking.component.css']
+  template: `
+    <app-panel title="RANKING OBJETIVOS">
+      <div *ngIf="rankings.length > 0">
+          <p *ngFor="let ranking of rankings" class="panel-block is-active is-size-7">
+              <!-- <target-resources [ranking]="ranking"></target-resources> -->
+              <span>{{ ranking.name }}</span>
+              <resource-points [resources]="mapToResources(ranking)"></resource-points>
+          </p>
+      </div>
+    </app-panel>
+  `
 })
 export class TargetRankingComponent extends ReactiveComponent implements OnInit, OnDestroy {
 

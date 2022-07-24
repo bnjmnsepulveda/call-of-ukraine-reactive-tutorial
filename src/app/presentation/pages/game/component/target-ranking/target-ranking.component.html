@@ -1,8 +1,0 @@
-<app-panel title="RANKING OBJETIVOS">
-    <div *ngIf="rankings.length > 0">
-        <p *ngFor="let ranking of rankings" class="panel-block is-active is-size-7">
-            <target-resources [ranking]="ranking"></target-resources>
-            <resource-points [resources]="mapToResources(ranking)"></resource-points>
-        </p>
-    </div>
-</app-panel>
