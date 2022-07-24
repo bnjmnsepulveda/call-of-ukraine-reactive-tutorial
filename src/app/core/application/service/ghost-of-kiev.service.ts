@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createRussianTarget } from '../../domain/service/createRussianTarget';
 import { createWeapon } from '../../domain/service/createWeapon';
-import { getRandomItem } from '../../lib/RandomHelper';
 import { GhostOfKievTargetDTO } from '../dto/GhostOfKievTargetDTO';
 
 @Injectable({
@@ -46,12 +45,12 @@ export class GhostOfKievService {
       description: 'Misil aire tierra',
     })
   }
-]
+  ]
 
-  constructor() {}
+  constructor() { }
 
-  getRandomRussianArmyTarget() {
-    return getRandomItem(this.ghostOfKievTargets.filter(t => t.type === 'army'))
+  getRussianArmies() {
+    return this.ghostOfKievTargets.filter(t => t.type === 'army')
   }
 
 }

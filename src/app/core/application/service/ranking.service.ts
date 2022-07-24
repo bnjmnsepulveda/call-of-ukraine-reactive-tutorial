@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CityRanking } from '../../domain/model/CityRanking';
 import { SoldierRanking } from '../../domain/model/SoldierRanking';
 import { TargetRanking } from '../../domain/model/TargetRanking';
 import { CityRankingStateService } from '../../store/service/city-ranking-state.service';
@@ -29,7 +28,7 @@ export class RankingService {
     
     const newRanking: SoldierRanking = {
       points: oldRanking.points + ranking.points,
-      russianCitiesAttacked: [...new Set( ...oldRanking.russianCitiesAttacked, ...ranking.russianCitiesAttacked )],
+     // russianCitiesAttacked: [...new Set( ...oldRanking.russianCitiesAttacked, ...ranking.russianCitiesAttacked )],
       soldiername: ranking.soldiername,
       statistics: {
         civilians: oldStatistics.civilians + statistics.civilians,
@@ -48,16 +47,8 @@ export class RankingService {
     this.targetRankingState.upsert(ranking)
   }
 
-  saveRussianCityDamage(damage: CityRanking) {
-    this.cityRankingState.upsert(damage)
-  }
-
   getSoldierRankingUpdate$() {
     return this.soldierRankingState.selectSoldierRanking()
-  }
-
-  getCityRanking() {
-    return this.cityRankingState.selectCityRanking(10)
   }
 
   getTargetRanking() {

@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT_SERVICE } from '../../../app.module';
 import { Soldier } from '../../domain/model/Soldier';
+import { DocumentProvider } from '../providers/document.provider';
 import { FirebaseClientService } from './firebase-client.service';
 
 @Injectable({
@@ -7,7 +9,7 @@ import { FirebaseClientService } from './firebase-client.service';
 })
 export class SoldierService {
 
-  constructor(private firebase: FirebaseClientService) { }
+  constructor(@Inject(DOCUMENT_SERVICE) private firebase: DocumentProvider) { }
 
   exists(name: string) {
     return this.firebase.existsDocument('soldiers', name)

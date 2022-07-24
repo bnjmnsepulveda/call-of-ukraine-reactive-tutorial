@@ -1,15 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { DocumentData } from 'firebase/firestore';
 import { filter, Observable } from 'rxjs';
+import { DOCUMENT_SERVICE } from '../../../app.module';
 import { Attack } from '../../domain/model/Attack';
+import { DocumentProvider } from '../providers/document.provider';
 import { FirebaseClientService } from './firebase-client.service';
+// import { FirebaseClientService } from './firebase-client.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AttackService {
 
-  constructor(private firebaseClient: FirebaseClientService) { }
+  constructor(@Inject(DOCUMENT_SERVICE) private firebaseClient: DocumentProvider) { }
 
   saveAttack(attack: Attack): Observable<Attack> {
     return this.firebaseClient.saveDocument('attacks', attack)
