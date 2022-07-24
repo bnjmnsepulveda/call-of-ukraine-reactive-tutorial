@@ -50,7 +50,6 @@ import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveCom
     <div class="grid" >
         <ng-template ngFor let-square [ngForOf]="squares">
           <div [class]="square.classnames.join(' ')">
-         
           </div>
         </ng-template>
       </div>

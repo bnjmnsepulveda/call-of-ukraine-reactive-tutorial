@@ -1,14 +1,13 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { concatMap, delay, filter, from, generate, map, merge, Observable, of, pluck, share, skipWhile, startWith, Subject, switchMap, take, takeUntil, takeWhile, tap, timeInterval, toArray, zip } from 'rxjs';
+import { concatMap, delay, filter, from, generate, map, merge, Observable, of, pluck, share, skipWhile, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO';
 import { GhostOfKievGameOverDTO } from 'src/app/core/application/dto/GhostOfKievGameOverDTO';
-import { createRussianTarget } from 'src/app/core/domain/service/createRussianTarget';
-import { createWeapon } from 'src/app/core/domain/service/createWeapon';
 import { SessionStateService } from 'src/app/core/store/service/session-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
+import { GhostOfKievService } from '../../../../../core/application/service/ghost-of-kiev.service';
 import { MovingRussianInvaderDTO } from './dto/MovingRussianInvaderDTO';
 import { drawInvaderBase } from './model/RussianEnemy';
-import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares, SquareEvent, createEvent, eraseByName, eraseDrawings, DrawingType, eraseByStartWith } from './model/Square';
+import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares, eraseDrawings, eraseByStartWith } from './model/Square';
 
 @Component({
   selector: 'app-reactive-ghost-of-kiev',
@@ -78,8 +77,17 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   columns: string[] = []
   rows: number[] = []
   // game
-  shooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter' })
+  @Input()
+  invaderDelay = 300;
+  @Input()
   shootDelay: number = 10;
+  @Input()
+  troopRows = 2// 3
+  @Input()
+  troopColumns = 2 //10
+  @Input()
+  movingToRight = 5 //6
+  shooter: SquareDraw = new SquareDraw({ column: 'H', row: 14, name: 'ghost-of-kiev', type: 'shooter' })
   // reactive properties
   squareUpdated$ = new Subject<Square>();
   invaderShooted$: Observable<Square> = null;
@@ -92,7 +100,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   @Output() onGameOver: EventEmitter<GhostOfKievGameOverDTO> = new EventEmitter<GhostOfKievGameOverDTO>();
   @Output() onDestroyAllTroop: EventEmitter<string> = new EventEmitter();
 
-  constructor(private sessionState: SessionStateService) { super() }
+  constructor(private sessionState: SessionStateService, private ghostOfKievService: GhostOfKievService) { super() }
 
   ngOnInit(): void {
 
@@ -109,7 +117,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
     const squares$ = merge(
       this.onMoveShooter(),
       this.onShoot(),
-      this.movingRussianTroop(),
+      this.movingRussianTroop('tropa-rusa')
     ).pipe(
       map(squareDraw => draw(erase(squares, squareDraw), squareDraw)),
       share()
@@ -262,23 +270,16 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   movingRussianInvader(invader: MovingRussianInvaderDTO) {
 
+    const target = this.ghostOfKievService.getRussianArmies()[0];
+
     const invaderShooted$ = this.invaderShooted$.pipe(
       switchMap(s => from(s.drawings)),
       filter(d => d.name === invader.name),
       tap(() => this.onAttack.emit({
-        russianTarget: createRussianTarget('Russian troop', 'moscu', {
-          soldiers: 10000
-        }),
+        russianTarget: target.target,
         soldier: this.sessionState.getSoldier(),
-        weapon: createWeapon({
-          damage: {
-            soldiers: 150
-          },
-          category: 'misil',
-          description: 'Ghost of kiev misil',
-          name: 'Ghost of kiev fucking misil'
-        })
-      }))
+        weapon: target.weapon
+      })),
     )
 
     return drawInvaderBase({
@@ -289,38 +290,56 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       skipRows: invader.skipRows ? invader.skipRows : 0,
       skipColumns: invader.skipColumns ? invader.skipColumns : 0,
       takeColumns: invader.takeColumns ? invader.takeColumns : 0,
-      delay: 200
+      delay: this.invaderDelay
     }).pipe(
       takeUntil(invaderShooted$)
     )
 
   }
 
-  movingRussianTroop(): Observable<SquareDraw> {
+  movingRussianTroop(troopPrefix: string = ''): Observable<SquareDraw> {
 
-    const troopRows = 3
-    const troopColumns = 10
-    const takeColumns = 6
+    const idPrefix = `${troopPrefix}-soldier-`
+    // const troopRows = 2// 3
+    // const troopColumns = 2 //10
+    // const movingToRight = 5 //6
     const soldierTroops: MovingRussianInvaderDTO[] = []
     let soldierSuffix = 0;
 
     const gameOver$ = this.squareUpdated$.pipe(
-      filter(s => s.drawings.map(d => d.name).some(n => n.startsWith('soldier-'))),
+      filter(s => s.drawings.map(d => d.name).some(n => n.startsWith(idPrefix))),
       skipWhile(s => s.row !== this.rows[this.rows.length - 1]),
-      tap(() => eraseByStartWith(this.squares, 'soldier-')),
+      tap(() => eraseByStartWith(this.squares, idPrefix)),
+      tap(() => this.onGameOver.emit({
+        points: 0,
+        winner: false
+      }))
     )
 
-    for (let x = 0; x < troopColumns; x++) {
-      for (let y = 0; y < troopRows; y++) {
-        soldierTroops.push({ name: `soldier-${soldierSuffix}`, type: 'invader', skipRows: y, skipColumns: x, takeColumns })
+    for (let x = 0; x < this.troopColumns; x++) {
+      for (let y = 0; y < this.troopRows; y++) {
+        soldierTroops.push({ name: `${idPrefix}${soldierSuffix}`, type: 'invader', skipRows: y, skipColumns: x, takeColumns: this.movingToRight })
         soldierSuffix += 1
       }
     }
+
+    const invaderShooted2$ = this.invaderShooted$.pipe(
+      switchMap(s => from(s.drawings)),
+      filter(d => d.name.startsWith('tropa-rusa')),
+      map(x => this.squares.filter(y => y.drawings.some(z => z.name.startsWith('tropa-rusa')))),
+      map(x => x.length),
+      filter( x=> x <= 1),
+      tap(() => this.onGameOver.emit({ 
+        points: 100,
+        winner: true
+      }))
+    )
 
     return merge(
       ...soldierTroops.map(x => this.movingRussianInvader(x))
     ).pipe(
       takeUntil(gameOver$),
+      takeUntil(invaderShooted2$)
     )
 
   }

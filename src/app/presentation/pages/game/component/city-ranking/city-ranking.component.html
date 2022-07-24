@@ -1,9 +1,0 @@
-<app-panel [title]="'CIUDADES RUSAS'">
-    <div *ngIf="cityRanking.length > 0" >
-        <a  *ngFor="let cr of cityRanking" class="panel-block is-active is-size-7">
-            <city-resources [ranking]="cr"></city-resources>
-            <resource-points [resources]="mapToResources(cr)"></resource-points>
-           
-        </a>
-    </div>
-</app-panel>
