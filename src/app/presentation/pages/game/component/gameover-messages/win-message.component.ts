@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-win-message',
@@ -21,6 +22,22 @@ export class WinMessageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
+    // Swal.fire({
+    //   title: 'Felicitaciones campeón',
+    //   text: '¿Deseas una nueva misión?',
+    //   icon: 'success' ,
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Si',
+    //   cancelButtonText: 'No'
+    // }).then((result) => {
+    //   if (result.value) {
+    //     this.onContinue.emit()
+    //   } else if (result.dismiss === Swal.DismissReason.cancel) {
+    //     this.onBack.emit()
+    //   }
+    // })
+
   }
 
 

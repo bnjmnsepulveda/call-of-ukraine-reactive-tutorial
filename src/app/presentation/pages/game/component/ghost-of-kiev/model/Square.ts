@@ -126,7 +126,7 @@ const eraseByName = (squares: Square[], name: string): Square[] => {
     for (let x = 0; x < newSquares.length; x++) {
         if (newSquares[x].drawings.map(x => x.name).includes(name)) {
             newSquares[x].removeDrawingByName(name)
-            console.log('deleting', name)
+            // console.log('deleting', name)
         }
     }
     return newSquares
@@ -137,7 +137,7 @@ const eraseByStartWith = (squares: Square[], name: string): Square[] => {
     for (let x = 0; x < newSquares.length; x++) {
         if (newSquares[x].drawings.map(x => x.name).some(x => x.startsWith(name))) {
             newSquares[x].removeDrawingStaringBy(name)
-            console.log('deleting', name)
+            // console.log('deleting', name)
         }
     }
     return newSquares
@@ -148,7 +148,7 @@ const eraseDrawings = (squares: Square[], col: string, row: number): Square[] =>
     for (let x = 0; x < newSquares.length; x++) {
         if (newSquares[x].column === col && newSquares[x].row === row) {
             newSquares[x].drawings = []
-            console.log('deleting', name)
+            // console.log('deleting', name)
         }
     }
     return newSquares

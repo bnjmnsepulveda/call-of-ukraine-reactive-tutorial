@@ -32,7 +32,7 @@ export class InMemoryDocumentService implements DocumentProvider{
     }
 
     saveDocument(collectionName: string, entity: any): Observable<any> {
-        console.log('save document' + collectionName, entity)
+        // console.log('save document' + collectionName, entity)
         let saved = false
         if (collectionName ==='attacks') {
             this.attacks.push(entity)

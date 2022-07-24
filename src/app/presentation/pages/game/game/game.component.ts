@@ -7,13 +7,10 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { createNotificationFromAttack } from 'src/app/core/domain/service/createNotificationFromAttack';
 import { AttackStateService } from 'src/app/core/store/service/attack-state.service';
 import { ReactiveComponent } from 'src/app/presentation/shared/utils/ReactiveComponent';
-import { SoldierAttackDTO } from 'src/app/core/application/dto/SoldierAttackDTO';
 import { AttackRequestDTO } from 'src/app/core/application/dto/AttackRequestDTO';
 import { GhostOfKievGameOverDTO } from '../../../../core/application/dto/GhostOfKievGameOverDTO';
 import { LevelGame } from '../component/ghost-of-kiev/model/LevelGame';
 import { LevelService } from '../../../../core/application/service/level.service';
-import { TargetRankingStateService } from '../../../../core/store/service/target-ranking-state.service';
-import { TargetRanking } from '../../../../core/domain/model/TargetRanking';
 
 enum GameState {
   PLAYING,
@@ -76,7 +73,6 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     private attackState: AttackStateService,
     private rankingService: RankingService,
     private levelService: LevelService,
-    private targetRankingState: TargetRankingStateService,
   ) { super() }
 
   ngOnInit(): void {
@@ -85,16 +81,14 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create observables
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
-    const targetRanking$ = this.calculateTargetRanking(realtimeAttacks$)
-    const soldierRanking$ = this.calculateSoldierRanking(realtimeAttacks$)
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),
       realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
+      realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveTargetRanking(a)),
+      realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveSoldierRanking(a)),
       notifyAttack$.subscribe(message => this.notificationMessage = message),
-      targetRanking$.subscribe(tr => this.targetRankingState.upsert(tr)),
-      soldierRanking$.subscribe(sr => this.rankingService.saveSoldierRanking(sr))
     )
   }
 
@@ -120,95 +114,15 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     )
   }
 
-  calculateSoldierRanking(attack$: Observable<Attack>) {
-
-    const soldierAttack$ = attack$.pipe(map(attack => ({ soldier: attack.soldier, weapon: attack.weapon } as SoldierAttackDTO)))
-    
-    return soldierAttack$.pipe(
-      map(({ soldier, weapon}) => {
-        let points = 0
-        const civilians = weapon.damage.civilians
-        const soldiers = weapon.damage.soldiers
-        const buildings = weapon.damage.buildings
-        const tanks = weapon.damage.tanks
-        const trucks = weapon.damage.trucks
-        const warplanes = weapon.damage.warplanes
-        const warships = weapon.damage.warships
-        points = civilians + soldiers + buildings + tanks + trucks + warplanes + warships
-        return {
-            soldiername: soldier.name,
-            points,
-            statistics: {
-                civilians,
-                soldiers,
-                buildings,
-                tanks,
-                trucks,
-                warplanes,
-                warships
-            }
-        }
-    })
-    )
-  }
-
-  calculateTargetRanking(attack$: Observable<Attack>) {
-     return attack$.pipe(
-      map(a => {
-        const damage = a.weapon.damage
-        const ranking = this.targetRankingState.getByName(a.russianTarget.name)
-        if (!ranking) {
-          return {
-            id: a.russianTarget.name,
-            name: a.russianTarget.name,
-            ...damage
-          } as TargetRanking
-        }
-        return {
-          ...ranking,
-          civilians: ranking.civilians + damage.civilians,
-          soldiers: ranking.soldiers + damage.soldiers,
-          buildings: ranking.buildings + damage.buildings,
-          tanks: ranking.tanks + damage.tanks,
-          trucks: ranking.trucks + damage.trucks,
-          warplanes: ranking.warplanes + damage.warplanes,
-          warships: ranking.warships + damage.warships
-        }
-      })
-    )
-  }
-
   onAttack(attack: AttackRequestDTO) {
     this.ukraineArmyService.attackRussianTarget(attack)
   }
 
   onGameOver(result: GhostOfKievGameOverDTO) {
-
     this.gameState = result.winner ? GameState.WON : GameState.LOSE
-  
     if (result.winner) {
       this.level = this.levelService.nextLevel()
     }
-
-    // const title = result.winner ? 'Felicitaciones campeón' : 'Perdedor verguenza humana'
-    // const text = result.winner ? '¿Deseas una nueva misión?' : '¿Deseas una revancha contra estos hijos de puta'
-    // const icon = result.winner ? 'success' : 'error'
-
-    // Swal.fire({
-    //   title: title,
-    //   text: text,
-    //   icon: icon,
-    //   showCancelButton: true,
-    //   confirmButtonText: 'Si',
-    //   cancelButtonText: 'No'
-    // }).then((result) => {
-    //   if (result.value) {
-
-    //   } else if (result.dismiss === Swal.DismissReason.cancel) {
-
-    //   }
-    // })
-
   }
 
   onPlayAgain() {
