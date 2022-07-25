@@ -11,11 +11,11 @@ export class InMemoryDocumentService implements DocumentProvider{
     
     private users: User[] = [
         {
-            id: 'a',
+            id: 'benjamin',
             name: 'benjamin'
         },
         {
-            id: 'b',
+            id: 'red-lion',
             name: 'red-lion'
         }
     ]
@@ -28,7 +28,7 @@ export class InMemoryDocumentService implements DocumentProvider{
         if (collectionName === 'soldiers') {
             exists = this.users.find(u => u.id === id) ? true : false
         }
-        return of(false);
+        return of(exists);
     }
 
     saveDocument(collectionName: string, entity: any): Observable<any> {

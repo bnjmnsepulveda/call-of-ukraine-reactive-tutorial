@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { interval, last, map, take, tap, } from 'rxjs';
 import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
-import { WhacTarget } from '../../dto/whac-target.dto';
+import { WhacTarget } from './whac-target.dto';
 import { WhacaMoleGameOverDTO } from 'src/app/core/dto/WhacaMoleGameOverDTO';
 import { SessionStateService } from '../../../../../services/session-state.service';
 import { WhacAMoleService } from '../../../../../services/whac-a-mole.service';

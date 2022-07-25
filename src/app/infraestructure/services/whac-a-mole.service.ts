@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Target } from 'src/app/infraestructure/presentation/pages/game/dto/whac-target.dto';
+import { Target } from 'src/app/infraestructure/presentation/pages/game/component/whac-a-mole/whac-target.dto';
 import { createRussianTarget } from '../../core/application/createRussianTarget';
 import { createWeapon } from '../../core/application/createWeapon';
 import { RussianTarget } from '../../core/domain/model/RussianTarget';

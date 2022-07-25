@@ -21,24 +21,26 @@ enum GameState {
 @Component({
   selector: 'app-game',
   template: `
+
   <style>
     .ranking {
       margin: 5px;
     }
   </style>
+
   <div class="container  has-text-centered mt-6 is-fluid">
     <h1 class="title is-1">Centro de mando soldado</h1>
-
     <app-notify class="m-3" [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
     
     <div class="columns">
+        <!-- RANKING SECTION-->
         <div class="column is-5">
-          <!-- RANKING -->
           <app-section-panel title="Ranking Score">
             <app-soldier-ranking class="ranking"></app-soldier-ranking>
             <app-target-ranking class="ranking"></app-target-ranking>
           </app-section-panel>
         </div>
+        <!-- GAME CONTENT -->
         <div class="column is-7">
           <div [ngSwitch]="gameState">
             <!-- GHOST OF KIEV GAME -->
