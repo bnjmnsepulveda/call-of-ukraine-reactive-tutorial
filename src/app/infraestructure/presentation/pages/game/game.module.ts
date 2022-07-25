@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GameComponent } from './game/game.component';
+import { GameComponent } from './component/game/game.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SoldierRankingComponent } from './soldier-ranking/soldier-ranking.component';
+import { SoldierRankingComponent } from './component/soldier-ranking/soldier-ranking.component';
 import { SharedModule } from '../../shared/shared.module';
 import { TargetRankingComponent } from './component/target-ranking/target-ranking.component';
 import { DamageValueComponent } from './component/damage-value/damage-value.component';

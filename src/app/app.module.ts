@@ -6,7 +6,7 @@ import { RegisterModule } from './infraestructure/presentation/pages/register/re
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule, Routes } from '@angular/router';
 import { NewSoldierComponent } from './infraestructure/presentation/pages/register/new-soldier/new-soldier.component';
-import { GameComponent } from './infraestructure/presentation/pages/game/game/game.component';
+import { GameComponent } from './infraestructure/presentation/pages/game/component/game/game.component';
 import { GameModule } from './infraestructure/presentation/pages/game/game.module';
 import { SharedModule } from './infraestructure/presentation/shared/shared.module';
 import { DocumentProvider } from './infraestructure/services/providers/document.provider';

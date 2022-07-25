@@ -4,14 +4,13 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-win-message',
   template: `
-  <div>
-    <h1>Ganaste Campeon</h1>
-    <p>El bastardo de putin obtine su merecido</p>
-    <div>
-      <button (click)="onContinue.emit()">Seguir en la guerra</button>
-      <button (click)="onBack.emit()">Volver con la esposa hijos y la mascota</button>
-    </div>
-  </div>
+    <app-section-panel title="Level Completed crack">
+      <app-title title="Ganaste Campeon"></app-title>
+      <app-subtitle subtitle="El bastardo de putin obtiene su merecido"></app-subtitle>
+      <div class="panel-block">
+        <button class="button is-link is-outlined is-fullwidth" (click)="onContinue.emit()">Seguir en la guerra</button>
+      </div>
+    </app-section-panel>
   `
 })
 export class WinMessageComponent implements OnInit {
@@ -23,20 +22,20 @@ export class WinMessageComponent implements OnInit {
 
   ngOnInit(): void {
     
-    // Swal.fire({
-    //   title: 'Felicitaciones campeón',
-    //   text: '¿Deseas una nueva misión?',
-    //   icon: 'success' ,
-    //   showCancelButton: true,
-    //   confirmButtonText: 'Si',
-    //   cancelButtonText: 'No'
-    // }).then((result) => {
-    //   if (result.value) {
-    //     this.onContinue.emit()
-    //   } else if (result.dismiss === Swal.DismissReason.cancel) {
-    //     this.onBack.emit()
-    //   }
-    // })
+    Swal.fire({
+      title: 'Felicitaciones Campeón',
+      text: '¿Deseas una nueva misión?',
+      icon: 'success' ,
+      showCancelButton: true,
+      confirmButtonText: 'Si, soy un rambo',
+      cancelButtonText: 'No, tengo miedo'
+    }).then((result) => {
+      if (result.value) {
+        this.onContinue.emit()
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        this.onBack.emit()
+      }
+    })
 
   }
 

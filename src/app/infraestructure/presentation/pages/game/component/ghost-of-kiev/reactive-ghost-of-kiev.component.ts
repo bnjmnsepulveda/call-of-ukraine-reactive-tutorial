@@ -15,18 +15,24 @@ import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquar
   selector: 'app-reactive-ghost-of-kiev',
   template: `
     <style>
+      .box-grid {
+        justify-content: center;
+        display: flex;
+      }
+      
       .grid {
         width: 302px;
         height: 302px;
         border: solid black 1px;
         display: flex;
         flex-wrap: wrap;
+        border-radius: 5px;
       }
 
       .grid div {
         width: 20px;
         height: 20px;
-        border: solid burlywood 0.5px;
+        /* border: solid burlywood 0.5px; */
         font-size: 0.4rem;
       }
 
@@ -52,21 +58,20 @@ import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquar
       }
     </style>
 
-    <article #screen class="message app-section" contenteditable="true" tabindex="0"   >
-    <div class="message-header">
-      <p> {{ title }}</p>
-    </div>
-    <div class="grid" >
-        <ng-template ngFor let-square [ngForOf]="squares">
-          <div [class]="getSquareClassnames(square)">
-            {{ square.key }}
-          </div>
-        </ng-template>
+    <article #screen class="container app-section" contenteditable="true" tabindex="0">
+      <div class="message-header">
+        <p> {{ title }}</p>
       </div>
-    <div class="message-body">
-      
-    </div>
-  </article>
+      <div class="box box-grid">
+        <div class="grid" >
+            <ng-template ngFor let-square [ngForOf]="squares">
+              <div [class]="getSquareClassnames(square)">
+                <!-- {{ square.key }} -->
+              </div>
+            </ng-template>
+        </div>
+      </div>
+    </article>
   `,
   styles: [
   ]
@@ -74,7 +79,7 @@ import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquar
 export class ReactiveGhostOfKievComponent extends ReactiveComponent implements OnInit, OnDestroy {
 
   // screen
-  title = 'REACTIVE Ghost of Kiev'
+  title = 'Ghost of Kiev War Games'
   squares: Square[] = []
   columns: string[] = []
   rows: number[] = []

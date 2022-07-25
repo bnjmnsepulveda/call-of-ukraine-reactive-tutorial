@@ -7,10 +7,10 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { AttackStateService } from 'src/app/infraestructure/services/attack-state.service';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
 import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
-import { GhostOfKievGameOverDTO } from '../../../../../core/dto/GhostOfKievGameOverDTO';
-import { LevelGame } from '../component/ghost-of-kiev/model/LevelGame';
-import { LevelService } from '../../../../services/level.service';
-import { createNotificationFromAttack } from '../../../../../core/application/createNotificationFromAttack';
+import { GhostOfKievGameOverDTO } from '../../../../../../core/dto/GhostOfKievGameOverDTO';
+import { LevelGame } from '../ghost-of-kiev/model/LevelGame';
+import { LevelService } from '../../../../../services/level.service';
+import { createNotificationFromAttack } from '../../../../../../core/application/createNotificationFromAttack';
 
 enum GameState {
   PLAYING,
@@ -21,6 +21,11 @@ enum GameState {
 @Component({
   selector: 'app-game',
   template: `
+  <style>
+    .ranking {
+      margin: 5px;
+    }
+  </style>
   <div class="container  has-text-centered mt-6 is-fluid">
     <h1 class="title is-1">Centro de mando soldado</h1>
 
@@ -28,25 +33,28 @@ enum GameState {
     
     <div class="columns">
         <div class="column is-5">
-            <app-soldier-ranking></app-soldier-ranking>
-            <app-target-ranking></app-target-ranking>
+          <!-- RANKING -->
+          <app-section-panel title="Ranking Score">
+            <app-soldier-ranking class="ranking"></app-soldier-ranking>
+            <app-target-ranking class="ranking"></app-target-ranking>
+          </app-section-panel>
         </div>
         <div class="column is-7">
-        <div [ngSwitch]="gameState">
-          <!-- GHOST OF KIEV GAME -->
-          <div *ngSwitchCase="gameStateOptions.PLAYING">
-            <app-reactive-ghost-of-kiev [level]="level" (onGameOver)="onGameOver($event)" (onAttack)="onGhostOfKievAttack($event)"></app-reactive-ghost-of-kiev>
+          <div [ngSwitch]="gameState">
+            <!-- GHOST OF KIEV GAME -->
+            <div *ngSwitchCase="gameStateOptions.PLAYING">
+              <app-reactive-ghost-of-kiev [level]="level" (onGameOver)="onGameOver($event)" (onAttack)="onGhostOfKievAttack($event)"></app-reactive-ghost-of-kiev>
+            </div>
+            <!-- WINNER MESSAGE -->
+            <div *ngSwitchCase="gameStateOptions.WON">
+              <app-win-message (onContinue)="onPlayAgain()"></app-win-message>
+            </div>
+            <!-- LOSER MESSAGE -->
+            <div *ngSwitchCase="gameStateOptions.LOSE">
+              <app-fail-message (onContinue)="onPlayAgain()"></app-fail-message>
+            </div>
+            <div *ngSwitchDefault>Select a game</div>
           </div>
-          <!-- WINNER MESSAGE -->
-          <div *ngSwitchCase="gameStateOptions.WON">
-            <app-win-message (onContinue)="onPlayAgain()"></app-win-message>
-          </div>
-          <!-- LOSER MESSAGE -->
-          <div *ngSwitchCase="gameStateOptions.LOSE">
-            <app-fail-message (onContinue)="onPlayAgain()"></app-fail-message>
-          </div>
-          <div *ngSwitchDefault>Select a game</div>
-        </div>
         </div>
     </div>
   </div>
@@ -78,7 +86,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),
-      realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
+      // realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
       realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveTargetRanking(a)),
       realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveSoldierRanking(a)),
       notifyAttack$.subscribe(message => this.notificationMessage = message),

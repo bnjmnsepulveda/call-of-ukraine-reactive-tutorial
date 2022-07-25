@@ -1,16 +1,16 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-fail-message',
   template: `
-  <div>
-    <h1>Perdiste</h1>
-    <p>Eres una verguenza para la humanidad</p>
-    <div>
-      <button (click)="onContinue.emit()">Quiero La Revancha</button>
-      <button (click)="onBack.emit()">Huir como una perra</button>
+  <app-section-panel title="Game Over">
+    <app-title title="Perdiste"></app-title>
+    <app-subtitle subtitle="Eres una verguenza para tu país"></app-subtitle>
+    <div class="panel-block">
+      <button class="button is-link is-outlined is-fullwidth" (click)="onContinue.emit()">Quiero la revancha</button>
     </div>
-  </div>
+  </app-section-panel>
   `
 })
 export class FailMessageComponent implements OnInit {
@@ -21,6 +21,20 @@ export class FailMessageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    Swal.fire({
+      title: 'Perdiste',
+      text: '¿Deseas la revancha para destrozar a estos hijos de puta?',
+      icon: 'success' ,
+      showCancelButton: true,
+      confirmButtonText: 'Si quiero venganza',
+      cancelButtonText: 'No, soy un pussy'
+    }).then((result) => {
+      if (result.value) {
+        this.onContinue.emit()
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        this.onBack.emit()
+      }
+    })
   }
 
 }

@@ -7,7 +7,7 @@ import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/u
 @Component({
   selector: 'app-target-ranking',
   template: `
-    <app-panel title="RANKING OBJETIVOS">
+    <app-panel title="Destrucción Tierras Rusas">
       <div *ngIf="rankings.length > 0">
           <p *ngFor="let ranking of rankings" class="panel-block is-active is-size-7">
               <!-- <target-resources [ranking]="ranking"></target-resources> -->
