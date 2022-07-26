@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { calculateRussiaDestruction } from "../../core/application/calculateRussiaDestruction";
 import { Attack } from "../../core/domain/model/Attack";
 import { RussiaDestruction } from "../../core/domain/model/RussiaDestruction";

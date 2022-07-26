@@ -79,7 +79,6 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
-    
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),

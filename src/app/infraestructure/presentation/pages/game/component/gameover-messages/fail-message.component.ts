@@ -6,9 +6,17 @@ import Swal from 'sweetalert2';
   template: `
   <app-section-panel title="Game Over">
     <app-title title="Perdiste"></app-title>
+    <span class="icon">
+      <i class="fa fa-bolt icon is-size-1"></i>
+    </span>
     <app-subtitle subtitle="Eres una verguenza para tu país"></app-subtitle>
-    <div class="panel-block">
-      <button class="button is-link is-outlined is-rounded is-fullwidth" (click)="onContinue.emit()">Quiero la revancha</button>
+    <div class="buttons is-centered">
+      <button class="button is-link is-outlined is-rounded" (click)="onContinue.emit()">
+        <span class="icon">
+          <i class="fa fa-bomb"></i>
+        </span>
+        <span>Quiero la revancha</span>
+      </button>
     </div>
   </app-section-panel>
   `

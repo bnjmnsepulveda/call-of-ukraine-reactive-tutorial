@@ -6,11 +6,12 @@ import Swal from 'sweetalert2';
   template: `
     <app-section-panel title="Level Completed crack">
       <app-title title="Ganaste Campeon"></app-title>
+      <span class="material-icons is-size-1">military_tech</span>
       <app-subtitle subtitle="El bastardo de putin obtiene su merecido"></app-subtitle>
-      <div class="panel-block">
-        <button class="button is-link is-outlined is-success is-rounded is-fullwidth" (click)="onContinue.emit()">
+      <div class="buttons is-centered">
+        <button class="button is-link is-outlined is-success is-rounded" (click)="onContinue.emit()">
           <span class="icon">
-            <i class="fas fa-check"></i>
+            <i class="fas fa-star"></i>
           </span>
           <span>Seguir en la guerra</span>  
         </button>

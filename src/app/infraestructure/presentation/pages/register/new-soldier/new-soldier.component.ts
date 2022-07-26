@@ -35,32 +35,30 @@ export class NewSoldierComponent {
   ) { }
 
   onAddSoldier() {
+    
     const soldierName = this.name.value
-    if (soldierName === null) {
-      Swal.fire({
+    
+    this.registerService.registerSoldierName(soldierName).subscribe({
+      next: () => this.goToGamePage(),
+      error: err => this.showErrorMessage(err.message)
+    })
+
+  }
+
+  goToGamePage() {
+    this.router.goToGame()
+  }
+
+  showErrorMessage(message: string) {
+    Swal
+      .fire({
         title: 'Usuario no Válido',
-        text: 'El nombre de usuario esta vacio',
+        text: message,
         icon: 'error' ,
         showCancelButton: true,
         confirmButtonText: 'Ok'
-      }).then(() => { })
-      return
-    }
-    this.registerService.registerSoldier(
-      soldierName,
-      soldier => {
-        this.router.goToGame()
-      },
-      error => {
-        Swal.fire({
-          title: 'Usuario no Válido',
-          text: 'El nombre de usuario ya esta en uso',
-          icon: 'error' ,
-          showCancelButton: true,
-          confirmButtonText: 'Ok'
-        }).then(() => { })
-      }
-    )
+      })
+      .then()
   }
 
 }
