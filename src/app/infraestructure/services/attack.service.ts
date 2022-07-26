@@ -3,7 +3,7 @@ import { DocumentData } from 'firebase/firestore';
 import { filter, Observable } from 'rxjs';
 import { DOCUMENT_SERVICE } from '../../app.module';
 import { Attack } from '../../core/domain/model/Attack';
-import { AttackStore } from '../store/attack.store';
+import { AttackStore } from '../state/attack.store';
 import { DocumentProvider } from './providers/document.provider';
 
 @Injectable({

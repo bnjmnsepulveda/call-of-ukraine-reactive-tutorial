@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Attack } from '../../core/domain/model/Attack';
 import { calculateSoldierRanking } from '../../core/application/calculateSoldierRanking';
-import { SoldierRankingStore } from '../store/soldier-ranking.store';
-import { SoldierRankingQuery } from '../store/soldier-ranking.query';
+import { SoldierRankingStore } from '../state/soldier-ranking.store';
+import { SoldierRankingQuery } from '../state/soldier-ranking.query';
 import { Order } from '@datorama/akita';
 
 @Injectable({

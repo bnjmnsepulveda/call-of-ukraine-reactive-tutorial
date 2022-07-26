@@ -3,8 +3,8 @@ import { map, Observable } from "rxjs";
 import { calculateRussiaDestruction } from "../../core/application/calculateRussiaDestruction";
 import { Attack } from "../../core/domain/model/Attack";
 import { RussiaDestruction } from "../../core/domain/model/RussiaDestruction";
-import { RussiaDestructionQuery } from "../store/russia-destruction.query";
-import { RussiaDestructionStore } from "../store/russian-destruction.store";
+import { RussiaDestructionQuery } from "../state/russia-destruction.query";
+import { RussiaDestructionStore } from "../state/russian-destruction.store";
 
 @Injectable({ 
     providedIn: 'root' 

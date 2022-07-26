@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Soldier } from '../../core/domain/model/Soldier';
-import { SessionQuery } from '../store/session.query';
-import { SessionStore } from '../store/session.store';
+import { SessionQuery } from '../state/session.query';
+import { SessionStore } from '../state/session.store';
 
 @Injectable({
   providedIn: 'root'
