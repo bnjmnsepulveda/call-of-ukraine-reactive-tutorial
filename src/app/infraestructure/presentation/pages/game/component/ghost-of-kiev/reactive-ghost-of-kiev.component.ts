@@ -4,7 +4,7 @@ import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
 import { GhostOfKievGameOverDTO } from 'src/app/core/dto/GhostOfKievGameOverDTO';
 import { RussianTarget } from '../../../../../../core/domain/model/RussianTarget';
 import { Weapon } from '../../../../../../core/domain/model/Weapon';
-import { SessionStateService } from '../../../../../services/session-state.service';
+import { SessionService } from '../../../../../services/session.service';
 import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
 import { MovingRussianInvaderDTO } from './dto/MovingRussianInvaderDTO';
 import { LevelGame } from './model/LevelGame';
@@ -115,7 +115,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   invaderShooted$: Observable<Square> = null;
   troopCapturePlayer$: Observable<Square> = null;
 
-  constructor(private sessionState: SessionStateService) { super() }
+  constructor(private sessionState: SessionService) { super() }
 
   ngOnInit(): void {
 

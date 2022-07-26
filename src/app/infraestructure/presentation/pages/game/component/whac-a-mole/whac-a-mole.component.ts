@@ -4,7 +4,7 @@ import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
 import { WhacTarget } from './whac-target.dto';
 import { WhacaMoleGameOverDTO } from 'src/app/core/dto/WhacaMoleGameOverDTO';
-import { SessionStateService } from '../../../../../services/session-state.service';
+import { SessionService } from '../../../../../services/session.service';
 import { WhacAMoleService } from '../../../../../services/whac-a-mole.service';
 
 @Component({
@@ -55,7 +55,7 @@ export class WhacAMoleComponent extends ReactiveComponent implements OnInit, OnD
   @Output() onAttack: EventEmitter<AttackRequestDTO> = new EventEmitter<AttackRequestDTO>();
   @Output() onGameOver: EventEmitter<WhacaMoleGameOverDTO> = new EventEmitter<WhacaMoleGameOverDTO>();
    
-  constructor(private sessionState: SessionStateService, private whacamoleService: WhacAMoleService) { super() }
+  constructor(private sessionState: SessionService, private whacamoleService: WhacAMoleService) { super() }
 
   ngOnInit(): void {
     this.initGame(this.delay, this.seconds)

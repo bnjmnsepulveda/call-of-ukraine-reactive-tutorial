@@ -13,8 +13,12 @@ export class AttackService {
 
   constructor(@Inject(DOCUMENT_SERVICE) private firebaseClient: DocumentProvider, private store: AttackStore) { }
 
-  saveAttack(attack: Attack): Observable<Attack> {
+  saveAttackOnBackend(attack: Attack): Observable<Attack> {
     return this.firebaseClient.saveDocument('attacks', attack)
+  }
+
+  saveAttackOnState(attack: Attack) {
+    this.store.add(attack, { prepend: true})
   }
 
   getRealtimeAttacks(): Observable<Attack> {

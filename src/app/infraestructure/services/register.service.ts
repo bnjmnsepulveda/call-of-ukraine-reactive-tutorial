@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { concatMap, of, switchMap, tap, throwError } from 'rxjs';
-import { SessionStateService } from './session-state.service';
+import { SessionService } from './session.service';
 import { SoldierAlreadyRegisteredError } from '../../core/error/SoldierAlreadyRegisteredError';
 import { Soldier } from '../../core/domain/model/Soldier';
 import { SoldierService } from './soldier.service';
@@ -12,7 +12,7 @@ import { createSoldier } from '../../core/application/createSoldier';
 export class RegisterService {
 
   constructor(
-    private sessionState: SessionStateService,
+    private sessionState: SessionService,
     private soldierService: SoldierService
   ) { }
 

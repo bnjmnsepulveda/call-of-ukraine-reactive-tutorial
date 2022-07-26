@@ -6,7 +6,7 @@ import { SessionStore } from '../store/session.store';
 @Injectable({
   providedIn: 'root'
 })
-export class SessionStateService {
+export class SessionService {
 
   constructor(
     private store: SessionStore,

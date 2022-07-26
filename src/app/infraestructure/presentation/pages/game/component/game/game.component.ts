@@ -4,7 +4,6 @@ import { AttackService } from 'src/app/infraestructure/services/attack.service';
 import { RankingService } from 'src/app/infraestructure/services/ranking.service';
 import { UkraineArmyService } from 'src/app/infraestructure/services/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
-import { AttackStateService } from 'src/app/infraestructure/services/attack-state.service';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
 import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
 import { GhostOfKievGameOverDTO } from '../../../../../../core/dto/GhostOfKievGameOverDTO';
@@ -70,7 +69,6 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   constructor(
     private ukraineArmyService: UkraineArmyService,
     private attackService: AttackService,
-    private attackState: AttackStateService,
     private rankingService: RankingService,
     private levelService: LevelService,
     private russiaDestructionService: RussiaDestructionService
@@ -111,12 +109,8 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
 
   saveAttackOnAppState(attack$: Observable<Attack>) {
     return attack$.pipe(
-      tap(attack => this.attackState.save(attack))
+      tap(attack => this.attackService.saveAttackOnState(attack))
     )
-  }
-
-  onAttack(attack: AttackRequestDTO) {
-    this.ukraineArmyService.attackRussianTarget(attack)
   }
 
   onGameOver(result: GhostOfKievGameOverDTO) {
