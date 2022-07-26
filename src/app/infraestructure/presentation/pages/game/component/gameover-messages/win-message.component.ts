@@ -8,7 +8,12 @@ import Swal from 'sweetalert2';
       <app-title title="Ganaste Campeon"></app-title>
       <app-subtitle subtitle="El bastardo de putin obtiene su merecido"></app-subtitle>
       <div class="panel-block">
-        <button class="button is-link is-outlined is-fullwidth" (click)="onContinue.emit()">Seguir en la guerra</button>
+        <button class="button is-link is-outlined is-success is-rounded is-fullwidth" (click)="onContinue.emit()">
+          <span class="icon">
+            <i class="fas fa-check"></i>
+          </span>
+          <span>Seguir en la guerra</span>  
+        </button>
       </div>
     </app-section-panel>
   `

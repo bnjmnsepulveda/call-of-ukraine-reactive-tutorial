@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
     <app-title title="Perdiste"></app-title>
     <app-subtitle subtitle="Eres una verguenza para tu país"></app-subtitle>
     <div class="panel-block">
-      <button class="button is-link is-outlined is-fullwidth" (click)="onContinue.emit()">Quiero la revancha</button>
+      <button class="button is-link is-outlined is-rounded is-fullwidth" (click)="onContinue.emit()">Quiero la revancha</button>
     </div>
   </app-section-panel>
   `

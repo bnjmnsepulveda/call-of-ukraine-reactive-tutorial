@@ -3,6 +3,7 @@ import { DocumentData } from 'firebase/firestore';
 import { filter, Observable } from 'rxjs';
 import { DOCUMENT_SERVICE } from '../../app.module';
 import { Attack } from '../../core/domain/model/Attack';
+import { AttackStore } from '../store/attack.store';
 import { DocumentProvider } from './providers/document.provider';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { DocumentProvider } from './providers/document.provider';
 })
 export class AttackService {
 
-  constructor(@Inject(DOCUMENT_SERVICE) private firebaseClient: DocumentProvider) { }
+  constructor(@Inject(DOCUMENT_SERVICE) private firebaseClient: DocumentProvider, private store: AttackStore) { }
 
   saveAttack(attack: Attack): Observable<Attack> {
     return this.firebaseClient.saveDocument('attacks', attack)

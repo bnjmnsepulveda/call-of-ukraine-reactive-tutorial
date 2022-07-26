@@ -23,8 +23,4 @@ export class SoldierRankingStateService {
     return this.query.selectAll({ sortBy: 'points' , sortByOrder: Order.DESC, limitTo})
   }
   
-  getAll() {
-    return this.query.getAll()
-  }
-  
 }

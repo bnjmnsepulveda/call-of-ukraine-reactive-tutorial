@@ -11,6 +11,7 @@ import { GhostOfKievGameOverDTO } from '../../../../../../core/dto/GhostOfKievGa
 import { LevelGame } from '../ghost-of-kiev/model/LevelGame';
 import { LevelService } from '../../../../../services/level.service';
 import { createNotificationFromAttack } from '../../../../../../core/application/createNotificationFromAttack';
+import RussiaDestructionService from '../../../../../services/russia-destruction.service';
 
 enum GameState {
   PLAYING,
@@ -22,22 +23,18 @@ enum GameState {
   selector: 'app-game',
   template: `
 
-  <style>
-    .ranking {
-      margin: 5px;
-    }
-  </style>
-
   <div class="container  has-text-centered mt-6 is-fluid">
     <h1 class="title is-1">Centro de mando soldado</h1>
-    <app-notify class="m-3" [title]="'Nuevo ataque!!'" [message]="notificationMessage" ></app-notify>
-    
+    <div class="columns">
+      <div class="column is-12">
+        <app-russia-destruction></app-russia-destruction>
+      </div>
+    </div>
     <div class="columns">
         <!-- RANKING SECTION-->
         <div class="column is-5">
           <app-section-panel title="Ranking Score">
-            <app-soldier-ranking class="ranking"></app-soldier-ranking>
-            <app-target-ranking class="ranking"></app-target-ranking>
+            <app-soldier-ranking></app-soldier-ranking>
           </app-section-panel>
         </div>
         <!-- GAME CONTENT -->
@@ -76,6 +73,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     private attackState: AttackStateService,
     private rankingService: RankingService,
     private levelService: LevelService,
+    private russiaDestructionService: RussiaDestructionService
   ) { super() }
 
   ngOnInit(): void {
@@ -85,12 +83,12 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
     const realtimeAttacks$ = this.attackService.getRealtimeAttacks()
     const saveAttackOnAppState$ = this.saveAttackOnAppState(realtimeAttacks$);
     const notifyAttack$ = this.notifyAttack(realtimeAttacks$)
+    
     // create subscription add subscription to component base for cleanup all resources
     this.addSubscription(
       saveAttackOnAppState$.subscribe(),
-      // realtimeAttacks$.subscribe(a => console.log(`new attack`, a)),
-      realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveTargetRanking(a)),
       realtimeAttacks$.subscribe(a => this.rankingService.calculateAndSaveSoldierRanking(a)),
+      realtimeAttacks$.subscribe(a => this.russiaDestructionService.calculateAndSaveRussiaDestruction(a)),
       notifyAttack$.subscribe(message => this.notificationMessage = message),
     )
   }
@@ -100,7 +98,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   }
 
   onGhostOfKievAttack(attack: AttackRequestDTO) {
-    console.log('Ghost-of-kiev-attack', attack)
+    // console.log('Ghost-of-kiev-attack', attack)
     this.ukraineArmyService.attackRussianTarget(attack)
   }
 

@@ -1,0 +1,2 @@
+
+export const MAX_SOLDIERNAME_LENGTH=12

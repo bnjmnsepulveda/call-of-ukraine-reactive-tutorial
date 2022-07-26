@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { RegisterService } from 'src/app/infraestructure/services/register.service';
 import { RouterService } from 'src/app/infraestructure/services/router.service';
 import Swal from 'sweetalert2';
+import { MAX_SOLDIERNAME_LENGTH } from '../../../../../core/constants';
 
 @Component({
   selector: 'app-new-soldier',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
       <h1 class="title is-1 ">Registrate en la legión WITI</h1>
       <div class="field is-grouped">
           <p class="control is-expanded">
-            <input id="name" type="text" class="input" [formControl]="name" placeholder="Indicanos tu nombre soldado">
+            <input id="name" (keyup.enter)="name.valid && onAddSoldier()" [maxLength]="maxNameLenght" type="text" class="input" [formControl]="name" placeholder="Indicanos tu nombre soldado">
           </p>
           <p class="control">
             <button class="button is-info" type="submit" (click)="onAddSoldier()" [disabled]="!name.valid">UNIRSE A LA GUERRA</button>
@@ -23,12 +24,14 @@ import Swal from 'sweetalert2';
 })
 export class NewSoldierComponent {
 
-  name = new FormControl(null);
+  maxNameLenght = MAX_SOLDIERNAME_LENGTH
+  name = new FormControl(null,[
+    Validators.required,
+  ]);
 
   constructor(
     private registerService: RegisterService,
     private router: RouterService
-
   ) { }
 
   onAddSoldier() {

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT_SERVICE } from '../../app.module';
+import { MAX_SOLDIERNAME_LENGTH } from '../../core/constants';
 import { Soldier } from '../../core/domain/model/Soldier';
 import { DocumentProvider } from './providers/document.provider';
 
@@ -15,6 +16,10 @@ export class SoldierService {
   }
 
   saveSoldier(soldier: Soldier) {
-    return this.firebase.saveDocument('soldiers', soldier)
+    return this.firebase.saveDocument('soldiers', { 
+      ...soldier, 
+      name: soldier.name.slice(0, MAX_SOLDIERNAME_LENGTH) 
+    })
   }
+
 }

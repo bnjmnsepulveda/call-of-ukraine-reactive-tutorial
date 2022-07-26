@@ -42,7 +42,7 @@ export const DOCUMENT_SERVICE = new InjectionToken<DocumentProvider>('app.docume
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
   ],
   providers: [{
     provide: DOCUMENT_SERVICE,
