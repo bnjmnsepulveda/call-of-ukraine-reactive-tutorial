@@ -2,7 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { DocumentData } from 'firebase/firestore';
 import { filter, Observable } from 'rxjs';
 import { DOCUMENT_SERVICE } from '../../app.module';
+import { createAttack } from '../../core/application/createAttack';
 import { Attack } from '../../core/domain/model/Attack';
+import { AttackRequestDTO } from '../../core/dto/AttackRequestDTO';
 import { AttackStore } from '../state/attack.store';
 import { DocumentProvider } from './providers/document.provider';
 
@@ -13,8 +15,8 @@ export class AttackService {
 
   constructor(@Inject(DOCUMENT_SERVICE) private firebaseClient: DocumentProvider, private store: AttackStore) { }
 
-  saveAttackOnBackend(attack: Attack): Observable<Attack> {
-    return this.firebaseClient.saveDocument('attacks', attack)
+  sendAttack(attackRequest: AttackRequestDTO){
+    return this.firebaseClient.saveDocument('attacks', createAttack(attackRequest))
   }
 
   saveAttackOnState(attack: Attack) {

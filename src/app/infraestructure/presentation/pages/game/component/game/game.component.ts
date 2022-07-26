@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { AttackService } from 'src/app/infraestructure/services/attack.service';
 import { RankingService } from 'src/app/infraestructure/services/ranking.service';
-import { UkraineArmyService } from 'src/app/infraestructure/services/ukraine-army.service';
 import { Attack } from 'src/app/core/domain/model/Attack';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
 import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
@@ -67,7 +66,6 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   gameStateOptions = GameState;
 
   constructor(
-    private ukraineArmyService: UkraineArmyService,
     private attackService: AttackService,
     private rankingService: RankingService,
     private levelService: LevelService,
@@ -96,8 +94,7 @@ export class GameComponent extends ReactiveComponent implements OnInit, OnDestro
   }
 
   onGhostOfKievAttack(attack: AttackRequestDTO) {
-    // console.log('Ghost-of-kiev-attack', attack)
-    this.ukraineArmyService.attackRussianTarget(attack)
+    this.attackService.sendAttack(attack)
   }
 
   notifyAttack(attack$: Observable<Attack>) {
