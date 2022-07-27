@@ -31,12 +31,15 @@ import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
             </th>
             <th>
               <i class="fas fa-anchor"></i>
+            </th>
+            <th>
+              <i class="fas fa-trophy"></i>
             </th> 
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let sr of soldierRankinks;let i = index">
-            <th>{{ i + 1 }} - {{ sr.soldiername }}</th>
+            <th>{{ i + 1 }} - {{ sr.soldiername }} </th>
             <td>{{ sr.statistics.civilians }}</td>
             <td>{{ sr.statistics.buildings }}</td>
             <td>{{ sr.statistics.soldiers }}</td>
@@ -44,16 +47,7 @@ import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
             <td>{{ sr.statistics.tanks }}</td>
             <td>{{ sr.statistics.warplanes }}</td>
             <td>{{ sr.statistics.warships }}</td>
-          </tr>
-          <tr *ngFor="let in of counter(9) ;let i = index">
-            <th>Benjamin</th>
-            <td>38</td>
-            <td>23</td>
-            <td>12</td>
-            <td>3</td>
-            <td>68</td>
-            <td>36</td>
-            <td>+32</td>
+            <td>{{ sr.points }}</td>
           </tr>
         </tbody>
       </table>   
@@ -76,9 +70,5 @@ export class SoldierRankingComponent extends ReactiveComponent implements OnInit
   ngOnDestroy(): void {
    this.unsubscribeComponent()
   }
-
-  counter(i: number) {
-    return new Array(i);
-  } 
 
 }

@@ -6,7 +6,7 @@ import { Attack } from 'src/app/core/domain/model/Attack';
 import { ReactiveComponent } from 'src/app/infraestructure/presentation/shared/utils/ReactiveComponent';
 import { AttackRequestDTO } from 'src/app/core/dto/AttackRequestDTO';
 import { GhostOfKievGameOverDTO } from '../../../../../../core/dto/GhostOfKievGameOverDTO';
-import { LevelGame } from '../ghost-of-kiev/model/LevelGame';
+import { LevelGame } from '../../../../../../core/domain/model/LevelGame';
 import { LevelService } from '../../../../../services/level.service';
 import { createNotificationFromAttack } from '../../../../../../core/application/createNotificationFromAttack';
 import RussiaDestructionService from '../../../../../services/russia-destruction.service';

@@ -39,9 +39,6 @@ export class WhacAMoleService {
     })
   ] 
 
-  
-  constructor() { }
-
   getRandomTarget() {
     const targets = this.getTargets()
     const index = Math.floor(Math.random() * targets.length)

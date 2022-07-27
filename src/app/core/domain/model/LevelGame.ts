@@ -1,7 +1,8 @@
-import { RussianTarget } from "../../../../../../../core/domain/model/RussianTarget";
-import { Weapon } from "../../../../../../../core/domain/model/Weapon";
+import { RussianTarget } from "./RussianTarget";
+import { Weapon } from "./Weapon";
 
 export interface LevelGame {
+  points: number;
   invaderDelay: number;
   shootDelay: number;
   troopRows: number;

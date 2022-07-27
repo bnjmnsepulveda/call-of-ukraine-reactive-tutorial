@@ -11,7 +11,7 @@ import { createSoldier } from '../../core/application/createSoldier';
 export class RegisterService {
 
   constructor(
-    private sessionState: SessionService,
+    private sessionService: SessionService,
     private soldierService: SoldierService
   ) { }
 
@@ -24,9 +24,9 @@ export class RegisterService {
       switchMap(name => this.soldierService.exists(name)),
       concatMap(existsSoldierName => !existsSoldierName ? create() : sendError()),
       switchMap(soldier => this.soldierService.saveSoldier(soldier)),
-      tap(soldier => this.sessionState.saveSoldierSession(soldier))
+      tap(soldier => this.sessionService.saveSoldierSession(soldier))
     )
-    
+
   }
 
 }

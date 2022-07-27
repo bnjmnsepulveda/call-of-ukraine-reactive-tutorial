@@ -115,6 +115,7 @@ export class WhacAMoleComponent extends ReactiveComponent implements OnInit, OnD
     if (whacTarget.selected) {
       this.hits++
       this.onAttack.emit({
+        points: 0,
         russianTarget: whacTarget.target.target,
         soldier: this.sessionState.getSoldier(),
         weapon: whacTarget.target.weapon

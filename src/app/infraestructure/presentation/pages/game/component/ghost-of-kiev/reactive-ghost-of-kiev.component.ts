@@ -7,7 +7,7 @@ import { Weapon } from '../../../../../../core/domain/model/Weapon';
 import { SessionService } from '../../../../../services/session.service';
 import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
 import { MovingRussianInvaderDTO } from './dto/MovingRussianInvaderDTO';
-import { LevelGame } from './model/LevelGame';
+import { LevelGame } from '../../../../../../core/domain/model/LevelGame';
 import { drawInvaderBase } from './model/RussianEnemy';
 import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquares, eraseDrawings, eraseByStartWith } from './model/Square';
 
@@ -62,6 +62,7 @@ import { erase, draw, Square, SquareDraw, createColumns, createRows, createSquar
       <div class="message-header">
         <p> {{ title }}</p>
       </div>
+      <p>Poder de municion {{ points }}</p>
       <div class="box box-grid">
         <div class="grid" >
             <ng-template ngFor let-square [ngForOf]="squares">
@@ -84,6 +85,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   columns: string[] = []
   rows: number[] = []
   // game
+  points = 0;
   invaderDelay = 300;
   shootDelay: number = 10;
   troopRows = 2// 3
@@ -95,6 +97,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
   // component properties
   @Input()
   set level(level: LevelGame) {
+    this.points = level.points
     this.invaderDelay = level.invaderDelay
     this.target = level.target
     this.weapon = level.weapon
@@ -289,6 +292,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       switchMap(s => from(s.drawings)),
       filter(d => d.name === invader.name),
       tap(() => this.onAttack.emit({
+        points: this.points,
         russianTarget: this.target,
         weapon: this.weapon,
         soldier: this.sessionState.getSoldier(),
@@ -305,6 +309,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       takeColumns: invader.takeColumns ? invader.takeColumns : 0,
       delay: this.invaderDelay
     }).pipe(
+      tap(() => this.points = this.calculatePoints(this.points)),
       takeUntil(invaderShooted$)
     )
 
@@ -321,7 +326,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       skipWhile(s => s.row !== this.rows[this.rows.length - 1]),
       tap(() => eraseByStartWith(this.squares, idPrefix)),
       tap(() => this.onGameOver.emit({
-        points: 0,
+        points: this.points,
         winner: false
       }))
     )
@@ -340,7 +345,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
       map(x => x.length),
       filter( x=> x <= 1),
       tap(() => this.onGameOver.emit({ 
-        points: 100,
+        points: this.points,
         winner: true
       }))
     )
@@ -370,6 +375,7 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
     const moveSquareDraw = () => (source: Observable<string>) => source.pipe(
       skipWhile(column => column === null),
+      tap(() => this.points = this.calculatePoints(this.points)),
       map(column => {
         return new SquareDraw({
           column: column,
@@ -406,6 +412,9 @@ export class ReactiveGhostOfKievComponent extends ReactiveComponent implements O
 
   //#endregion
 
+  calculatePoints(remainingPoints: number) {
+    return Math.max(remainingPoints - 5, 0)
+  }
 
 }
 

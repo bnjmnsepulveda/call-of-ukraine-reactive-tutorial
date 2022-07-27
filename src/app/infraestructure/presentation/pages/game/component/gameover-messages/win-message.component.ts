@@ -24,8 +24,6 @@ export class WinMessageComponent implements OnInit {
   @Output() onContinue: EventEmitter<undefined> = new EventEmitter<undefined>();
   @Output() onBack: EventEmitter<undefined> = new EventEmitter<undefined>();
 
-  constructor() { }
-
   ngOnInit(): void {
     
     Swal.fire({

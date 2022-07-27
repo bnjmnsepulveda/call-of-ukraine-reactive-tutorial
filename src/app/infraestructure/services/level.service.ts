@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createRussianTarget } from '../../core/application/createRussianTarget';
 import { createWeapon } from '../../core/application/createWeapon';
-import { LevelGame } from '../presentation/pages/game/component/ghost-of-kiev/model/LevelGame';
+import { LevelGame } from '../../core/domain/model/LevelGame';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ export class LevelService {
   levelIndex = 0
   levels: LevelGame[] = [
     {
+      points: 1000,
       invaderDelay: 500,
       movingToRight: 5,
       shootDelay: 20,
@@ -30,6 +31,7 @@ export class LevelService {
 
     },
     {
+      points: 1500,
       invaderDelay: 500,
       movingToRight: 5,
       shootDelay: 20,
@@ -49,6 +51,7 @@ export class LevelService {
       })
     },
     {
+      points: 2000,
       invaderDelay: 500,
       movingToRight: 3,
       shootDelay: 20,
@@ -69,6 +72,7 @@ export class LevelService {
       })
     },
     {
+      points: 3000,
       invaderDelay: 100,
       movingToRight: 3,
       shootDelay: 20,
@@ -88,8 +92,6 @@ export class LevelService {
       })
     }
   ]
-
-  constructor() { }
 
   getFirstLevel() {
     return this.levels[0]
