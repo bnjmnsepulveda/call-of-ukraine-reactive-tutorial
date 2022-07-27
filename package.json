@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "deploy": "ng build --prod --base-href=/",
+    "deploy": "ng build --prod --base-href=/call-of-ukraine-reactive-tutorial/",
     "test": "ng test"
   },
   "private": true,
