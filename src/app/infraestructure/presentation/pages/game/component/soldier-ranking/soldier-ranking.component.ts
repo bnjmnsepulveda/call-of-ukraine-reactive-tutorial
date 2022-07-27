@@ -33,7 +33,8 @@ import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
               <i class="fas fa-anchor"></i>
             </th>
             <th>
-              <i class="fas fa-trophy"></i>
+              <!-- <i class="fas fa-trophy"></i> -->
+              <span class="material-icons has-text-danger">local_fire_department</span>
             </th> 
           </tr>
         </thead>
@@ -47,7 +48,14 @@ import { ReactiveComponent } from '../../../../shared/utils/ReactiveComponent';
             <td>{{ sr.statistics.tanks }}</td>
             <td>{{ sr.statistics.warplanes }}</td>
             <td>{{ sr.statistics.warships }}</td>
-            <td>{{ sr.points }}</td>
+            <td>
+              <div>
+                <!-- <span class="material-icons has-text-danger">local_fire_department</span> -->
+                <span>
+                  {{ sr.points }}
+                </span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>   

@@ -15,16 +15,11 @@ import { Component, Input, OnInit } from '@angular/core';
   styles: [
   ]
 })
-export class DamageValueComponent implements OnInit {
+export class DamageValueComponent {
 
   @Input()
   value: number
   @Input()
   iconName: string
   
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }
